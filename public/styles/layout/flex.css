@@ -1,0 +1,19 @@
+/* flexbox */
+section.flexbox {
+    display: flex;
+    flex-direction: column;
+}
+section.flexbox > article {
+    padding: 10px;
+    margin: 10px;
+    border-left: 1px solid black;
+}
+section.flexbox > article:nth-child(1) {
+    flex: 1 100px
+}
+section.flexbox > article:nth-child(2) {
+    flex: 1 200px
+}
+section.flexbox > article:nth-child(3) {
+    flex: 2;
+}

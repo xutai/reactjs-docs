@@ -1,0 +1,277 @@
+.vue-logo {
+    width: 30px;
+    height: 30px;
+}
+.react-logo {
+    width: 30px;
+    height: 30px;
+}
+
+
+
+/* ||header */
+
+     
+
+/* 
+header
+.wrapper
+.header-sub 
+.header-sub-sub1 .header-sub-sub2
+                        span, a, a, a, a  .menu
+                             .menu-wrapper
+                                a  .menu-nav
+                                    menu-nav-ul
+                                        li  li
+*/
+    header {
+        background-color: #24292e;
+        padding: 8px 0
+    }
+
+
+    .header-sub > * > a{
+        color: whitesmoke;
+        margin-right: 10px;
+        padding: 3px 6px;
+    }
+    .header-sub a.register {
+        border: 1px solid white;
+        border-radius: 5px;
+    }
+    .header-sub a.logout
+     {
+        display: none;
+    }
+    .header-sub a.logout {
+        color: grey;
+        border: 1px solid grey;
+    }
+    
+    .header-sub a.login {
+        /* display: none; */
+    }
+    .header-sub .username {
+        display: none;
+    }
+    .username {
+        color: white;
+        padding: 0 10px 0 0 ;
+    }
+
+    .header-sub  canvas {
+        vertical-align: baseline;
+    }
+
+    .header-sub {
+        display: flex;
+        /* color: white; */
+        flex-flow: row nowrap;
+
+
+        /* cross axis */
+        align-items: center;
+        align-content: center;
+
+        /* main axis */
+        justify-content: space-between;
+        justify-items: auto;
+
+    }
+
+    .header-sub-sub1 {
+        /* align-self: flex-start; */
+        /* justify-self: start; */
+        display: flex;
+       /* cross axis */
+       align-items: center;
+       align-content: center;
+
+       /* main axis */
+       justify-content: space-between;
+       justify-items: auto;
+    }
+    .header-sub-sub2 {
+        /* align-self: flex-end; */
+        /* justify-self: end; */
+        display: flex;
+        /* cross axis */
+        align-items: center;
+        align-content: center;
+ 
+        /* main axis */
+        justify-content: space-between;
+        justify-items: auto;
+    }
+
+    .menu-close {
+       padding-right: 20px;
+    }
+
+    .menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: whitesmoke;
+        /* color: black; */
+        z-index: 2;
+        flex: 1 1 auto;
+        
+    }
+    .menu-wrapper {
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100vh;
+        width: 300px;
+    }
+    .menu-wrapper > a {
+        /* main axis */
+        /* justify-self: flex-end; */
+        /* cross axis */
+        align-self: flex-end;
+    }
+    .menu-wrapper nav ul{
+        display: flex;
+        flex-flow: column nowrap;
+    }
+    .menu-wrapper nav ul summary {
+        padding: 0 0 0 10px;
+        border-top: 1px solid black;
+    }
+
+    .flex-auto {
+        display: flex;
+        flex-flow: column nowrap;
+      
+    }
+
+    .flex-auto a {
+        padding: 10px 20px;
+    }
+
+    /* 
+header
+.wrapper
+.header-sub 
+.header-sub-sub1 .header-sub-sub2
+                        span, a, a, a, a  .menu
+                             .menu-wrapper
+                                a  .menu-nav
+                                    menu-nav-ul
+                                        li  li
+*/
+    
+    @media screen and (min-width: 40em) { 
+        .header-sub {
+            display: flex;
+            /* color: white; */
+            flex-flow: row nowrap;
+    
+    
+            /* cross axis */
+            align-items: center;
+            align-content: center;
+    
+            /* main axis */
+            justify-content: space-between;
+            /* justify-items: auto;  */
+            /* justify-items, not for flex! */
+    
+        }
+    
+        .header-sub-sub1 {
+            /* align-self: flex-start; */
+            /* justify-self: start; */
+            display: flex;
+           /* cross axis */
+           align-items: center;
+           align-content: center;
+    
+           /* main axis */
+           justify-content: space-between;
+           justify-items: auto;
+           flex: 0 1 auto;
+        }
+        .header-sub-sub2 {
+            /* align-self: flex-end; */
+            /* justify-self: end; */
+            display: flex;
+            /* cross axis */
+            align-items: center;
+            align-content: center;
+            
+            /* main axis */
+            justify-content: space-around;
+            /* justify-items: auto; */
+            flex: 1 1 auto;
+        }
+    
+
+        .canvas-menu {
+            display: none;
+        }
+        .menu-close {
+            display: none;
+        }
+    
+        .menu {
+            /* display: none; */
+            display: flex;
+            /* position: fixed; */
+            position: static;
+            /* top: 0; */
+            /* right: 0; */
+            /* background-color: whitesmoke; */
+            background-color: initial;
+            /* color: black; */
+            /* z-index: 2; */
+            z-index: 1;
+            order: -1;
+            flex: 1 1 auto;
+            color: white;
+            
+        }
+
+        .menu-wrapper {
+            display: flex;
+            /* flex-flow: column nowrap; */
+            flex-flow: row nowrap;
+            /* height: 100vh; */
+            height: auto;
+            /* width: 300px; */
+            width: auto;
+        }
+        .menu-wrapper > a {
+            /* main axis */
+            /* justify-self: flex-end; */
+            /* cross axis */
+            align-self: flex-end;
+        }
+        .menu-wrapper nav ul{
+            display: flex;
+            /* flex-flow: column nowrap; */
+            flex-flow: row nowrap;
+        }
+        .menu-wrapper nav ul summary {
+            padding: 0 5px 0 0;
+        }
+    
+    
+        .flex-auto {
+            display: flex;
+            flex-flow: column nowrap;
+            /* new */
+            position: fixed;
+            z-index: 2;
+            background-color: white;
+            margin: 20px 0 0 0;
+        }
+        .flex-auto a {
+            padding: 10px;
+        }
+    
+    }
+
+
+ 

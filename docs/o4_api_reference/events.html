@@ -1,0 +1,253 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                SyntheticEvent
+            </h1>
+        </section>
+
+        <section>
+        </section>
+        <section>
+            <ul>
+                <li>overview</li>
+                <ul>
+                    <li>event-pooling</li>
+                </ul>
+                <li>supported events</li>
+                <li>reference</li>
+                <ul>
+                    <li>clipboard-events</li>
+                    <li>composition-events</li>
+                    <li>keyboard-events</li>
+                    <li>focus-events</li>
+                    <li>form-events</li>
+                    <li>generic-events</li>
+                    <li>mouse-events</li>
+                    <li>pointer-events</li>
+                    <li>selection-events</li>
+                    <li>touch-events</li>
+                    <li>ui-events</li>
+                    <li>wheel-events</li>
+                    <li>media-events</li>
+                    <li>image-events</li>
+                    <li>animation-events</li>
+                    <li>transition-events</li>
+                    <li>other-events</li>
+                </ul>
+            </ul>
+        </section>
+        <section>
+            <h2>overview</h2>
+            <p>Your event handlers will be passed instances of SyntheticEvent, a cross-browser wrapper around the browser’s native event. It has the same interface as the browser’s native event, including stopPropagation() and preventDefault(), except the events work identically across all browsers.</p>
+            <p>If you find that you need the underlying browser event for some reason, simply use the nativeEvent attribute to get it. Every SyntheticEvent object has the following attributes:</p>
+            <pre><code>
+    boolean bubbles
+boolean cancelable
+DOMEventTarget currentTarget
+boolean defaultPrevented
+number eventPhase
+boolean isTrusted
+DOMEvent nativeEvent
+void preventDefault()
+boolean isDefaultPrevented()
+void stopPropagation()
+boolean isPropagationStopped()
+void persist()
+DOMEventTarget target
+number timeStamp
+string type
+            </code></pre>
+            <p class="warning">As of v0.14, returning false from an event handler will no longer stop event propagation. Instead, e.stopPropagation() or e.preventDefault() should be triggered manually, as appropriate.</p>
+        </section>
+        <section>
+            <h2>event-pooling</h2>
+            <p>The SyntheticEvent adj. 综合的；合成的，人造的 is pooled v. 积水成池；淤积（pool的过去分词. This means that the SyntheticEvent
+                object will be reused and all properties will be nullified 取消的,无效的 after the event callback has been
+                invoked. This is for performance reasons. As such, you cannot access the event in an asynchronous way.
+            </p>
+            <pre><code>
+        function onClick(event) {
+        console.log(event); // => nullified object.
+        console.log(event.type); // => "click"
+        const eventType = event.type; // => "click"
+        
+        setTimeout(function() {
+            console.log(event.type); // => null
+            console.log(eventType); // => "click"
+        }, 0);
+        
+        // Won't work. this.state.clickEvent will only contain null values.
+        this.setState({clickEvent: event});
+        
+        // You can still export event properties.
+        this.setState({eventType: event.type});
+        }
+            </code></pre>
+            <p class="warning">If you want to access the event properties in an asynchronous way, you should call
+                event.persist() on the event, which will remove the synthetic event from the pool and allow references
+                to the event to be retained vt. 保持; 记住 by user code.</p>
+        </section>
+        <section>
+            <h2>supported events</h2>
+            <p>React normalizes events so that they have consistent properties across different browsers.</p>
+            <p>The event handlers below are triggered by an event in the bubbling phase. To register an event handler for the capture phase, append Capture to the event name; for example, instead of using onClick, you would use onClickCapture to handle the click event in the capture phase.</p>
+            <ul>
+                <li>clipboard-events</li>
+                <li>composition-events</li>
+                <li>keyboard-events</li>
+                <li>focus-events</li>
+                <li>form-events</li>
+                <li>generic-events</li>
+                <li>mouse-events</li>
+                <li>pointer-events</li>
+                <li>selection-events</li>
+                <li>touch-events</li>
+                <li>ui-events</li>
+                <li>wheel-events</li>
+                <li>media-events</li>
+                <li>image-events</li>
+                <li>animation-events</li>
+                <li>transition-events</li>
+                <li>other-events</li>
+            </ul>
+        </section>
+        <section>
+            <h2>reference</h2>
+        </section>
+        <section>
+            <h2 id=""></h2>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

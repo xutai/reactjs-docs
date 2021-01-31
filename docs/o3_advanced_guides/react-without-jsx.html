@@ -1,0 +1,212 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                React Without JSX
+            </h1>
+        </section>
+
+        <section>
+            <blockquote>
+                <p>JSX is not a requirement for using React. Using React without JSX is especially convenient when you
+                    don’t
+                    want to
+                    set up compilation in your build environment.</p>
+            </blockquote>
+            <p>Each JSX element is just syntactic sugar for calling React.createElement(component, props, ...children).
+                So,
+                anything you can do with JSX can also be done with just plain JavaScript.</p>
+            <p>For example, this code written with JSX:</p>
+            <pre><code class="javascript">
+class Hello extends React.Component {
+    render() {
+        return &lt;div&gt;Hello {this.props.toWhat}&lt;/div&gt;;
+    }
+    }
+    
+    ReactDOM.render(
+    &lt;Hello toWhat=&quot;World&quot; /&gt;,
+    document.getElementById(&apos;root&apos;)
+);
+            </code></pre>
+            <script type="text/babel">
+                // class Hello extends React.Component {
+                //     render() {
+                //         return <div>Hello {this.props.toWhat}</div>;
+                //     }
+                // }
+        
+                // ReactDOM.render(
+                //     <Hello toWhat="World" />,
+                //     document.getElementById('root')
+                // );
+            </script>
+            <p>can be compiled to this code that does not use JSX:</p>
+            <pre><code>
+        class Hello extends React.Component {
+            render() {
+                return React.createElement(&apos;div&apos;, null, &grave;Hello ${this.props.toWhat}&grave;);
+            }
+            }
+            
+            ReactDOM.render(
+            React.createElement(Hello, {toWhat: &apos;World&apos;}, null),
+            document.getElementById(&apos;root&apos;)
+        );
+                    </code></pre>
+            <script>
+                // class Hello extends React.Component {
+                //     render() {
+                //         return React.createElement('div', null, `Hello ${this.props.toWhat}`);
+                //     }
+                // }
+
+                // ReactDOM.render(
+                //     React.createElement(Hello, { toWhat: 'World' }, null),
+                //     document.getElementById('root')
+                // );
+            </script>
+            <p>If you’re curious to see more examples of how JSX is converted to JavaScript, you can try out the online
+                Babel compiler.</p>
+            <p>The component can either be provided as a string, as a subclass of React.Component, or a plain function.
+            </p>
+            <p>If you get tired of typing React.createElement so much, one common pattern is to assign a shorthand:</p>
+            <pre><code>
+        const e = React.createElement;
+        
+        ReactDOM.render(
+          e(&apos;div&apos;, null, &apos;Hello World&apos;),
+          document.getElementById(&apos;root&apos;)
+        );
+        </code></pre>
+            <p>f you use this shorthand form for React.createElement, it can be almost as convenient to use React
+                without JSX.</p>
+            <p>Alternatively, you can refer to community projects such as react-hyperscript and hyperscript-helpers
+                which offer a terser syntax.</p>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                { 
+                    key: 1, 
+                    text: '#', 
+                    href: '#' },
+            ]
+            const listItems = Items.map((item) =>
+                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+                id: 1,
+                title: 'Learn React',
+                content: 'React is sky blue!'
+            },
+            {
+                id: 2,
+                title: 'Learn Vue',
+                content: 'Vue is mood Green!'
+            }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

@@ -1,0 +1,68 @@
+
+
+html, body {
+    font-size: 16px;
+}
+
+/*section*/
+
+.section{
+    max-width: 860px;
+    padding: 2px 8px;
+    margin: 0 auto 20px auto;
+    border: 1px solid lightgray;
+    box-shadow: 1px 1px 1px 1px lightgray ;
+    background-color: rgba(111,111,111,0.04);
+
+}
+
+/*advance server image*/
+
+#asv{
+    width: 860px;
+    margin: auto;
+}
+
+#asv img{
+    width: 860px;
+    margin: auto;
+}
+
+
+@media only screen and (max-width: 860px){
+
+
+    html, body {
+        font-size: 14px;
+    }
+
+    .section{
+        width: 96%;
+        padding: 2px 8px;
+        margin: 0 auto 20px auto;
+        border: 1px solid lightgray;
+        box-shadow: 1px 1px 1px 1px lightgray ;
+        background-color: rgba(111,111,111,0.04);
+
+    }
+
+
+    #asv{
+        width:100%;
+        margin: auto;
+    }
+    #asv img{
+        width: 100%;
+        margin: auto;
+    }
+
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,422 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Forwarding Refs
+            </h1>
+        </section>
+
+        <section>
+            <ul>
+                <li>forwarding-refs-to-dom-components</li>
+                <li>note-for-component-library-maintainers</li>
+                <li>forwarding-refs-in-higher-order-components</li>
+                <li>displaying-a-custom-name-in-devtools</li>
+            </ul>
+        </section>
+        <section>
+            <p>Ref forwarding is a technique for automatically passing a ref through a component to one of its children.
+                This is typically not necessary for most components in the application. However, it can be useful for
+                some kinds of components, especially in reusable component libraries. The most common scenarios are
+                described below.</p>
+        </section>
+        <section>
+            <h2 id="forwarding-refs-to-dom-components">forwarding-refs-to-dom-components</h2>
+            <p>Consider a FancyButton component that renders the native button DOM element: </p>
+            <pre><code>
+                
+
+function FancyButton(props) {
+    return (
+      &lt;button className=&quot;FancyButton&quot;&gt;
+        {props.children}
+      &lt;/button&gt;
+    );
+  }
+  
+  
+            </code></pre>
+            <p>React components hide their implementation details, including their rendered output. Other components
+                using FancyButton usually will not need to obtain a ref to the inner button DOM element. This is good
+                because it prevents components from relying on each other’s DOM structure too much.</p>
+            <p>Although such encapsulation is desirable for application-level components like FeedStory or Comment, it
+                can be inconvenient for highly reusable “leaf” components like FancyButton or MyTextInput. These
+                components tend to be used throughout the application in a similar manner as a regular DOM button and
+                input, and accessing their DOM nodes may be unavoidable for managing focus, selection, or animations.
+            </p>
+            <p><strong>Ref forwarding is an opt-in feature that lets some components take a ref they receive, and pass
+                    it further down (in other words, “forward” it) to a child.</strong></p>
+            <p>In the example below, FancyButton uses React.forwardRef to obtain the ref passed to it, and then forward
+                it to the DOM button that it renders:</p>
+            <pre><code>
+                
+
+const FancyButton = React.forwardRef((props, ref) =&gt; (  &lt;button ref={ref} className=&quot;FancyButton&quot;&gt;    {props.children}
+&lt;/button&gt;
+));
+
+// You can now get a ref directly to the DOM button:
+const ref = React.createRef();
+&lt;FancyButton ref={ref}&gt;Click me!&lt;/FancyButton&gt;;
+
+
+            </code></pre>
+            <p>This way, components using FancyButton can get a ref to the underlying button DOM node and access it if
+                necessary—just like if they used a DOM button directly.</p>
+            <p>Here is a step-by-step explanation of what happens in the above example:</p>
+            <ul>
+                <li>We create a React ref by calling React.createRef and assign it to a ref variable.</li>
+                <li>We pass our ref down to &lt;FancyButton ref={ref}&gt; by specifying it as a JSX attribute.</li>
+                <li>React passes the ref to the (props, ref) =&gt; ... function inside forwardRef as a second argument.
+                </li>
+                <li>We forward this ref argument down to &lt;button ref={ref}&gt; by specifying it as a JSX attribute.
+                </li>
+                <li>When the ref is attached, ref.current will point to the &lt;button&gt; DOM node.</li>
+            </ul>
+            <p class="info">
+                <br>
+                The second ref argument only exists when you define a component with React.forwardRef call. Regular
+                function or class components don’t receive the ref argument, and ref is not available in props either.
+                <br><br>
+                Ref forwarding is not limited to DOM components. You can forward refs to class component instances, too.
+            </p>
+        </section>
+        <section>
+            <h2 id="note-for-component-library-maintainers">note-for-component-library-maintainers</h2>
+            <p>When you start using forwardRef in a component library, you should treat it as a breaking change and release a new major version of your library. This is because your library likely has an observably different behavior (such as what refs get assigned to, and what types are exported), and this can break apps and other libraries that depend on the old behavior.</p>
+            <p>Conditionally applying React.forwardRef when it exists is also not recommended for the same reasons: it changes how your library behaves and can break your users’ apps when they upgrade React itself.</p>
+        </section>
+        <section>
+            <h2 id="forwarding-refs-in-higher-order-components">forwarding-refs-in-higher-order-components</h2>
+            <p>This technique can also be particularly useful with higher-order components (also known as HOCs). Let’s start with an example HOC that logs component props to the console: </p>
+            <pre><code>
+                
+
+function logProps(WrappedComponent) {  class LogProps extends React.Component {
+    componentDidUpdate(prevProps) {
+      console.log(&apos;old props:&apos;, prevProps);
+      console.log(&apos;new props:&apos;, this.props);
+    }
+
+    render() {
+      return &lt;WrappedComponent {...this.props} /&gt;;    }
+  }
+
+  return LogProps;
+}
+
+
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="displaying-a-custom-name-in-devtools">displaying-a-custom-name-in-devtools</h2>
+            <p>React.forwardRef accepts a render function. React DevTools uses this function to determine what to display for the ref forwarding component.</p>
+            <p>For example, the following component will appear as ”ForwardRef” in the DevTools:</p>
+            <pre><code>
+                
+
+const WrappedComponent = React.forwardRef((props, ref) =&gt; {
+    return &lt;LogProps {...props} forwardedRef={ref} /&gt;;
+  });
+  
+  
+            </code></pre>
+            <p>If you name the render function, DevTools will also include its name (e.g. ”ForwardRef(myFunction)”):</p>
+            <pre><code>
+                
+
+const WrappedComponent = React.forwardRef(
+    function myFunction(props, ref) {
+      return &lt;LogProps {...props} forwardedRef={ref} /&gt;;
+    }
+  );
+  
+  
+            </code></pre>
+            <p>You can even set the function’s displayName property to include the component you’re wrapping:</p>
+            <pre><code>
+                
+
+function logProps(Component) {
+    class LogProps extends React.Component {
+      // ...
+    }
+  
+    function forwardRef(props, ref) {
+      return &lt;LogProps {...props} forwardedRef={ref} /&gt;;
+    }
+  
+    // Give this component a more helpful display name in DevTools.
+    // e.g. &quot;ForwardRef(logProps(MyComponent))&quot;
+    const name = Component.displayName || Component.name;  forwardRef.displayName = &grave;logProps(${name})&grave;;
+    return React.forwardRef(forwardRef);
+  }
+  
+  
+            </code></pre>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#forwarding-refs-to-dom-components',
+                    href: '#forwarding-refs-to-dom-components',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#note-for-component-library-maintainers',
+                    href: '#note-for-component-library-maintainers',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 3,
+                    text: '#forwarding-refs-in-higher-order-components',
+                    href: '#forwarding-refs-in-higher-order-components',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 4,
+                    text: '#displaying-a-custom-name-in-devtools',
+                    href: '#displaying-a-custom-name-in-devtools',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+            ]
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+    // forwarding refs v1 - Forwarding refs to DOM components 
+    // function FancyButton(props) {
+    //     return (
+    //         <button className="FancyButton">
+    //             {props.children}
+    //         </button>
+    //     )
+    // }
+
+    // forwarding refs v2 - Forwarding refs to DOM components 
+    const FancyButton = React.forwardRef((props, ref) =>
+        (
+            <button ref={ref} className="FancyButton">
+                {props.children}
+            </button>
+        )
+    )
+
+    // You can now get a ref directly to the DOM button:
+    const ref = React.createRef();
+    console.info("ref", ref)
+    console.info("ref.current", ref.current)
+
+
+    // forwarding refs - forwarding refs in higher-order components
+    function logProps(WrappedComponent) {
+        class LogProps extends React.Component {
+            componentDidUpdate(prevProps) {
+                console.log('old props:', prevProps)
+                console.log('new props:', this.props)
+            }
+
+            render() {
+                return <WrappedComponent {...this.props} />
+            }
+        }
+
+        return LogProps
+    }
+
+    // trash code
+    class FancyButton1 extends React.Component {
+        focus() {
+            // ...
+            console.info('focus')
+        }
+        render() {
+            return <button>FancyButton1</button>
+        }
+    }
+    const logPropsFancyButton1 = logProps(FancyButton1)
+    console.info("logPropsFancyButton1",logPropsFancyButton1)
+    const Btn = new logPropsFancyButton1()
+    console.info("Btn",Btn)
+
+    ReactDOM.render(
+        // v1
+        // <div>
+        //     <FancyButton>
+        //         haha
+        //     </FancyButton>
+        // </div>,
+        // v2
+        <div>
+            <FancyButton ref={ref}>
+                Click me!
+            </FancyButton>
+        </div>,
+        document.getElementById('react'),
+        () => {
+            console.info("ref.current", ref.current)
+            console.log(new Date().getUTCSeconds()) 
+        }
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

@@ -1,0 +1,293 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Uncontrolled Components
+            </h1>
+        </section>
+
+        <section>
+            <ul>
+                <ul>
+                    <li>default-values</li>
+                </ul>
+                <li>the-file-input-tag</li>
+            </ul>
+        </section>
+        <section>
+            <p>In most cases, we recommend using controlled components to implement forms. In a controlled component, form data is handled by a React component. The alternative is uncontrolled components, where form data is handled by the DOM itself.</p>
+            <p>To write an uncontrolled component, instead of writing an event handler for every state update, you can use a ref to get form values from the DOM.</p>
+            <p>For example, this code accepts a single name in an uncontrolled component:</p>
+            <pre><code>
+class NameForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.input = React.createRef();  }
+    
+    handleSubmit(event) {
+        alert(&apos;A name was submitted: &apos; + this.input.current.value);    event.preventDefault();
+    }
+    
+    render() {
+        return (
+        &lt;form onSubmit={this.handleSubmit}&gt;
+            &lt;label&gt;
+            Name:
+            &lt;input type=&quot;text&quot; ref={this.input} /&gt;        &lt;/label&gt;
+            &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+        &lt;/form&gt;
+        );
+    }
+}
+            </code></pre>
+            <p>Since an uncontrolled component keeps the source of truth in the DOM, it is sometimes easier to integrate React and non-React code when using uncontrolled components. It can also be slightly less code if you want to be quick and dirty. Otherwise, you should usually use controlled components.</p>
+            <p>If it’s still not clear which type of component you should use for a particular situation, you might find this article on controlled versus uncontrolled inputs to be helpful.</p>
+        </section>
+        <section>
+            <h3 id="default-values">default-values</h3>
+            <p>In the React rendering lifecycle, the value attribute on form elements will override the value in the DOM. With an uncontrolled component, you often want React to specify the initial value, but leave subsequent updates uncontrolled. To handle this case, you can specify a defaultValue attribute instead of value.</p>
+            <pre><code>
+render() {
+    return (
+        &lt;form onSubmit={this.handleSubmit}&gt;
+        &lt;label&gt;
+            Name:
+            &lt;input
+            defaultValue=&quot;Bob&quot;          type=&quot;text&quot;
+            ref={this.input} /&gt;
+        &lt;/label&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+        &lt;/form&gt;
+    );
+}
+            </code></pre>
+            <p>Likewise, &lt;input type=&quot;checkbox&quot;&gt; and &lt;input type=&quot;radio&quot;&gt; support defaultChecked, and &lt;select&gt; and &lt;textarea&gt; supports defaultValue.</p>
+        </section>
+        <section>
+            <h2 id="the-file-input-tag">the-file-input-tag</h2>
+            <p>In HTML, an &lt;input type=&quot;file&quot;&gt; lets the user choose one or more files from their device storage to be uploaded to a server or manipulated by JavaScript via the File API.</p>
+            <p>&lt;input type=&quot;file&quot; /&gt;</p>
+            <p>In React, an &lt;input type=&quot;file&quot; /&gt; is always an uncontrolled component because its value can only be set by a user, and not programmatically.</p>
+            <p>You should use the File API to interact with the files. The following example shows how to create a ref to the DOM node to access file(s) in a submit handler:</p>
+            <pre><code>
+                
+
+class FileInput extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.fileInput = React.createRef();  }
+    handleSubmit(event) {
+      event.preventDefault();
+      alert(
+        &grave;Selected file - ${this.fileInput.current.files[0].name}&grave;    );
+    }
+  
+    render() {
+      return (
+        &lt;form onSubmit={this.handleSubmit}&gt;
+          &lt;label&gt;
+            Upload file:
+            &lt;input type=&quot;file&quot; ref={this.fileInput} /&gt;        &lt;/label&gt;
+          &lt;br /&gt;
+          &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+        &lt;/form&gt;
+      );
+    }
+  }
+  
+  ReactDOM.render(
+    &lt;FileInput /&gt;,
+    document.getElementById(&apos;root&apos;)
+  );
+  
+  
+            </code></pre>
+        </section>
+        
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+                id: 1,
+                title: 'Learn React',
+                content: 'React is sky blue!'
+            },
+            {
+                id: 2,
+                title: 'Learn Vue',
+                content: 'Vue is mood Green!'
+            }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+    class NameForm extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleSubmit = this.handleSubmit.bind(this);
+            this.input = React.createRef();  
+        }
+
+        handleSubmit(event) {
+            alert('A name was submitted: ' + this.input.current.value);    
+            event.preventDefault();
+        }
+
+        render() {
+            return (
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Name:
+                        <input type="text" ref={this.input} />        
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <div>
+            <NameForm/>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

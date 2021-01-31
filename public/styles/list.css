@@ -1,0 +1,133 @@
+/* 
+a
+ul
+dt, dt, dd
+
+*/
+
+
+
+
+nav ul,
+aside ul,
+nav ol,
+aside ol
+ {
+    /* ul default browser styles left-padding 40px */
+    padding: 0;
+}
+
+nav ul,
+aside ul {
+    /* ul default browser styles list-style:circle  */
+    /* list-style: none; */
+}
+
+
+
+/* =links */
+li { 
+    /* display: inline-block */
+    margin: .3em 0;
+}
+nav li,
+ol li {
+    /* display: block; */
+}
+nav ul li,
+nav ol li {
+    /* list-style-type: none; */
+     /* margin: 1em 0; */
+     margin: 0 0;
+}
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+    padding: 0 0 0 10px;
+}
+footer li {
+    margin: 0 10px 0 0 ;
+}
+ul.vue li::before,
+ol.vue li::before {
+    content: url('/resources/images/vuejs/vue_15x15.png')
+}
+ul.react li::before,
+ol.react li::before {
+    content: url('/resources/images/reactjs/react.svg');
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+}
+
+
+a {
+    outline: none;
+    text-decoration: none;
+    /* padding:2px 1px 0; */
+
+    /* display: inline-block; */
+    /* padding: 10px 10px; */
+    /* padding: 10px 20px 10px 0; */
+    /* color: black; */
+    border: none;
+}
+
+a:link,
+nav a:link{
+    color: #3388ee;
+    /* 123456789abcdef */
+    /* ff-33 === dd, 88-88, ee-22 */
+    /* red, green, blue */
+    /* red + green = yellow */
+    /* blue + more (red+green===yellow) = lighter */
+
+    /* background-color: rgba(207, 232, 220, 0.2); */
+}
+a:visited,
+nav a:visited  {
+    /* color: black; */
+    color: #333;
+}
+
+nav a:link,
+nav a:visited {
+    font-weight: bold;
+}
+
+
+a:focus {
+    border-bottom: 1px solid;
+}
+a:hover,
+nav a:hover {
+    /* border-bottom: 1px solid; */
+    /* color: #ffffff; */
+    /* background-color: #3388ee; */
+}
+
+
+
+a:active {
+    border-bottom-color: red;
+}
+nav a::after{
+    /* content: '|';
+    padding: 0 0 0 10px;
+    color: #00a0df; */
+}
+
+
+
+
+
+
+/* ||dl, dt, dd */
+dl {
+
+}
+dt {
+}
+
+

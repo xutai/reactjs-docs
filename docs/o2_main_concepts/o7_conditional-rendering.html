@@ -1,0 +1,446 @@
+<section>
+    <h1>Conditional Rendering</h1>
+</section>
+<section id="list"></section>
+<script type="text/babel">
+    const Items = [
+        { key: 1, text: '#element-variables', href: '#element-variables' },
+        { key: 2, text: '#inline-if-with-logical--operator', href: '#inline-if-with-logical--operator' },
+        { key: 3, text: '#inline-if-else-with-conditional-operator', href: '#inline-if-else-with-conditional-operator' },
+        { key: 4, text: '#preventing-component-from-rendering', href: '#preventing-component-from-rendering' },
+    ]
+    const listItems = Items.map((item) =>
+        <li key={item.key}><a href={item.href}>{item.text}</a></li>
+    )
+    ReactDOM.render(
+        <ul>{listItems}</ul>,
+        document.getElementById('list')
+    )
+</script>
+<section>
+    <p>In React, you can create distinct components that encapsulate behavior you need. Then, you can render only some
+        of them, depending on the state of your application.</p>
+    <p>Conditional rendering in React works the same way conditions work in JavaScript. Use JavaScript operators like if
+        or the conditional operator to create elements representing the current state, and let React update the UI to
+        match them.</p>
+    <p>Consider these two components:</p>
+    <p>We’ll create a Greeting component that displays either of these components depending on whether a user is logged
+        in:</p>
+    <p>This example renders a different greeting depending on the value of isLoggedIn prop.</p>
+</section>
+<section>
+    <h2>Element Variables</h2>
+    <p>You can use variables to store elements. This can help you conditionally render a part of the component while the
+        rest of the output doesn’t change.</p>
+    <p>Consider these two new components representing Logout and Login buttons:</p>
+    <p>In the example below, we will create a stateful component called LoginControl.</p>
+    <p>It will render either &lt;LoginButton /&gt; or &lt;LogoutButton /&gt; depending on its current state. It will
+        also render a &lt;Greeting /&gt; from the previous example:</p>
+    <p>While declaring a variable and using an if statement is a fine way to conditionally render a component, sometimes
+        you might want to use a shorter syntax. There are a few ways to inline conditions in JSX, explained below.
+    </p>
+</section>
+<section>
+    <h2>Inline If with Logical && Operator</h2>
+    <p>You may embed expressions in JSX by wrapping them in curly braces. This includes the JavaScript logical &&
+        operator. It can be handy for conditionally including an element:</p>
+    <p>It works because in JavaScript, true && expression always evaluates to expression, and false && expression always
+        evaluates to false.</p>
+    <p>Therefore, if the condition is true, the element right after && will appear in the output. If it is false, React
+        will ignore and skip it.
+    </p>
+</section>
+<section>
+    <h2>Inline If-Else with Conditional Operator</h2>
+    <p>Another method for conditionally rendering elements inline is to use the JavaScript conditional operator
+        condition ? true : false.</p>
+    <p>In the example below, we use it to conditionally render a small block of text.</p>
+    <p>It can also be used for larger expressions although it is less obvious what’s going on:</p>
+    <p>Just like in JavaScript, it is up to you to choose an appropriate style based on what you and your team consider
+        more readable. Also remember that whenever conditions become too complex, it might be a good time to extract a
+        component.
+    </p>
+</section>
+<section>
+    <h2>Preventing Component from Rendering</h2>
+    <p>In rare cases you might want a component to hide itself even though it was rendered by another component. To do
+        this return null instead of its render output.</p>
+    <p>In the example below, the &lt;WarningBanner /&gt; is rendered depending on the value of the prop called warn. If
+        the value of the prop is false, then the component does not render:</p>
+    <p>Returning null from a component’s render method does not affect the firing of the component’s lifecycle methods.
+        For instance componentDidUpdate will still be called.</p>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>
+
+
+<section id="plain-html">
+    <code id="greeting"></code>
+    <button id="loginLogoutButton"></button>
+</section>
+<section id="vue">
+    <component :is="checkLoggedIn"></component>
+    <login-control></login-control>
+    <mail-box :messages="messages"></mail-box>
+    <page></page>
+</section>
+<section id="react"></section>
+<script>
+    // vanilla
+    const plainHtml = document.querySelector('section[id^="plain-html"]')
+    const elGreeting = document.querySelector('code[id="greeting"]')
+    const booleanLoggedIn = false
+    const loginLogoutButton = document.querySelector('button[id*="loginLogoutButton"]')
+    const unreadMessages = ['React', 'Re: React', 'Re:Re: React'];
+    const unreadMessagesNotificationEl = document.createElement('mark')
+    const div = document.createElement('div')
+    const isLoggedInStatus = booleanLoggedIn ? 'currently' : 'not'
+    const isLoggedInMessage = `
+        <i>The user is <b>${ isLoggedInStatus}</b> logged in.</i>
+    `
+    elGreeting.textContent = booleanLoggedIn ? 'Welcome back!' : 'Please sign up.'
+    loginLogoutButton.textContent = !!!booleanLoggedIn ? 'login' : 'logout'
+    unreadMessagesNotificationEl.textContent = unreadMessages.length > 0 ? `You have ${unreadMessages.length} unread messages.` : ''
+    div.appendChild(unreadMessagesNotificationEl)
+    plainHtml.appendChild(div)
+
+    const div2 = document.createElement('div')
+    div2.innerHTML = isLoggedInMessage
+    plainHtml.append(div2)
+
+    let booleanShowWarning = true
+    let buttonTextContent = booleanShowWarning ? 'Hide' : 'Show'
+    const handleToggleClick = () => {
+        try {
+            const warningText = document.getElementById('warningText')
+            // console.info( "warningText",warningText )
+            const showWarningButton = document.getElementById('showWarningButton')
+            const warningContainer = document.getElementById('warningContainer')
+            if (!!warningText) {
+                warningText.parentNode.removeChild(warningText)
+                booleanShowWarning = false
+                buttonTextContent = booleanShowWarning ? 'Hide' : 'Show'
+                showWarningButton.textContent = buttonTextContent
+            } else {
+                const div4 = document.createElement('div')
+                div4.innerText = 'Warning'
+                div4.className = 'warning'
+                div4.id = 'warningText'
+                // console.warn(div4)
+                warningContainer.prepend(div4)
+
+                booleanShowWarning = true
+                buttonTextContent = booleanShowWarning ? 'Hide' : 'Show'
+                showWarningButton.textContent = buttonTextContent
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    let warningBanner = booleanShowWarning ? `
+        <div class="warning" id="warningText">
+        Warning!
+        </div>
+    ` : ''
+    let toggleShowWarningButton = `
+        <button onclick="handleToggleClick()" id="showWarningButton">
+            ${buttonTextContent}
+        </button>    
+    `
+    const div3 = document.createElement('div')
+    div3.innerHTML = `<div id="warningContainer">${warningBanner} ${toggleShowWarningButton}</div>`
+    plainHtml.append(div3)
+
+
+</script>
+<script>
+    // vue
+    const viewState = {
+        isLoggedIn: false,
+        isLoggedInTemplate: [
+            'user-greeting',
+            'guest-greeting'
+        ],
+        messages: ['React', 'Re: React', 'Re:Re: React']
+    }
+    const options = {
+        data() {
+            return {
+                ...viewState
+            }
+        },
+        computed: {
+            checkLoggedIn() {
+                return this.isLoggedIn ? this.isLoggedInTemplate[0] : this.isLoggedInTemplate[1]
+            }
+        }
+    }
+    const vueInstance = Vue.createApp(options)
+    vueInstance.component('user-greeting', {
+        template: `
+        <code>Welcome back!</code>
+     `
+    })
+    vueInstance.component('guest-greeting', {
+        template: `
+        <code>Please sign up.</code>
+        `
+    })
+    vueInstance.component('login-button', {
+        template: `
+            <button>
+                Login
+            </button>
+        `
+    })
+    vueInstance.component('logout-button', {
+        template: `
+            <button>
+                Logout
+            </button>
+        `
+    })
+    vueInstance.component('login-control', {
+        data() {
+            return {
+                isLoggedIn: false,
+                buttonTabs: ['logout-button', 'login-button',]
+            }
+        },
+        template: `
+    
+            <component :is="buttonComponent"></component>
+            <div>
+                <i>The user is <b>{{isLoggedIn ? 'currently' : 'not'}}</b> logged in.</i>
+            </div>
+        `,
+        computed: {
+            buttonComponent() {
+                return this.isLoggedIn ? this.buttonTabs[0] : this.buttonTabs[1]
+            }
+        }
+    })
+    vueInstance.component('mail-box', {
+        props: ['messages'],
+        data() {
+            return {
+                unreadMessages: this.messages
+            }
+        },
+        template: `
+        <div>
+            <mark v-if="hasUnreadMessages">
+                You have {{unreadMessages.length}} unread messages.
+            </mark>
+        </div>
+        `,
+        computed: {
+            hasUnreadMessages() {
+                return this.unreadMessages.length > 0 ? true : false
+            }
+        }
+    })
+    vueInstance.component('warning-banner', {
+        props: ['warn'],
+        data() {
+            return {
+                warn: this.warn
+            }
+        },
+        template: `
+            <div v-if="warn" :class="'warning'">
+                Warning!
+            </div>
+        `
+    })
+    vueInstance.component('page', {
+        data() {
+            return {
+                showWarning: true
+            }
+        },
+        template: `
+            <warning-banner :warn="showWarning"></warning-banner>
+            <button @click="toggleShowWarning">{{showOrHide}}</button>
+        `,
+        computed: {
+            showOrHide() {
+                return this.showWarning ? 'Hide' : 'Show'
+            }
+        },
+        methods: {
+            toggleShowWarning() {
+                this.showWarning = !this.showWarning
+            }
+        }
+    })
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    const state = {
+        isLoggedIn: false
+    }
+    const messages = ['React', 'Re: React', 'Re:Re: React'];
+    function UserGreeting(props) {
+        return <code>Welcome back!</code>;
+    }
+
+    function GuestGreeting(props) {
+        return <code>Please sign up.</code>;
+    }
+    function Greeting(props) {
+        const isLoggedIn = props.isLoggedIn;
+        if (isLoggedIn) {
+            return <UserGreeting />;
+        }
+        return <GuestGreeting />;
+    }
+    function LoginButton(props) {
+        return (
+            <button onClick={props.onClick}>
+                Login
+            </button>
+        );
+    }
+    function LogoutButton(props) {
+        return (
+            <button onClick={props.onClick}>
+                Logout
+            </button>
+        );
+    }
+    class LoginControl extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleLoginClick = this.handleLoginClick.bind(this);
+            this.handleLogoutClick = this.handleLogoutClick.bind(this);
+            this.state = { isLoggedIn: false };
+        }
+
+        handleLoginClick() {
+            this.setState({ isLoggedIn: true });
+        }
+
+        handleLogoutClick() {
+            this.setState({ isLoggedIn: false });
+        }
+
+        render() {
+            const isLoggedIn = this.state.isLoggedIn;
+            let button;
+            if (isLoggedIn) {
+                button = <LogoutButton onClick={this.handleLogoutClick} />;
+            } else {
+                button = <LoginButton onClick={this.handleLoginClick} />;
+            }
+
+            return (
+                <div>
+                    <Greeting isLoggedIn={isLoggedIn} />
+                    {button}
+                    <div>
+                        <i>The user is <b>{isLoggedIn ? 'currently' : 'not'}</b> logged in.</i>
+                    </div>
+                </div>
+
+                // Inline If-Else with Conditional Operator
+                // {isLoggedIn
+                //         ? <LogoutButton onClick={this.handleLogoutClick} />
+                //         : <LoginButton onClick={this.handleLoginClick} />
+                //     }
+            );
+        }
+    }
+    function Mailbox(props) {
+        const unreadMessages = props.unreadMessages;
+        return (
+            <div>
+                {unreadMessages.length > 0 &&
+                    <mark>
+                        You have {unreadMessages.length} unread messages.
+                    </mark>
+                }
+            </div>
+        );
+    }
+    function WarningBanner(props) {
+        if (!props.warn) {
+            return null;
+        }
+
+        return (
+            <div className="warning">
+                Warning!
+            </div>
+        );
+    }
+
+    class Page extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { showWarning: true };
+            this.handleToggleClick = this.handleToggleClick.bind(this);
+        }
+
+        handleToggleClick() {
+            this.setState(state => ({
+                showWarning: !state.showWarning
+            }));
+        }
+
+        render() {
+            return (
+                <div>
+                    <WarningBanner warn={this.state.showWarning} />
+                    <button onClick={this.handleToggleClick}>
+                        {this.state.showWarning ? 'Hide' : 'Show'}
+                    </button>
+                </div>
+            );
+        }
+    }
+    // const el = <div>
+    //     <UserGreeting />
+    //     <GuestGreeting />
+    // </div>
+    // const el = <Greeting isLoggedIn={!state.isLoggedIn} />
+    const el = <div>
+        <LoginControl />
+        <Mailbox unreadMessages={messages} />
+        <Page />
+    </div>
+    ReactDOM.render(
+        el,
+        document.getElementById('react'),
+        () => { console.log(new Date().getDate()) }
+    )
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

@@ -1,0 +1,182 @@
+/* 
+@font-face
+@media min-width font-size
+@media orientation
+@media min-width and orientation
+@media hover
+@media pointer
+*/
+@font-face {
+    font-family: 'vollkornbold';
+    src: url('http://xutai.site:8083/fonts/vollkorn-bold-webfont.woff2') format('woff2'),
+         url('http://xutai.site:8083/fonts/vollkorn-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'montserratregular';
+    src: url('http://xutai.site:8083/fonts/montserrat-regular-webfont.woff2') format('woff2'),
+         url('http://xutai.site:8083/fonts/montserrat-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@import url('http://xutai.site:8083/fonts/font-awesome-4.7.0/css/font-awesome.css') screen;
+
+/* font-size */
+
+
+
+
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'vollkornbold', serif;
+}
+
+
+/* general text styling */
+html {
+    font-size: 10px;
+}
+
+
+
+/* Using viewport units for responsive typography */
+h1 {
+    font-size: calc(1.5rem + 3vw);
+}
+h2 {
+    font-size: calc(1.4rem + 2.6vw);
+}
+h3 {
+    font-size: calc(1.3rem + 2.2vw);
+}
+h4 {
+    font-size: calc(1.2rem + 1.8vw);
+}
+h5 {
+    font-size: calc(1.1rem + 1.4vw);
+}
+h6 {
+    font-size: calc(1rem + 1vw);
+}
+
+/* ||font-size */
+/* responsive typography */
+@media (min-width: 1200px) {
+    h1 {
+        font-size: 6rem;
+    }
+    h2 {
+        font-size: 3.8em;
+    }
+    h3 {
+        font-size: 3.2em;
+    }
+    h4 {
+        font-size: 2.8em;
+    }
+    h5 {
+        font-size: 2.4em;
+    }
+    h6 {
+        font-size: 2em;
+    }
+}
+
+
+
+div,
+header,
+footer,
+main,
+article,
+aside,
+ul {
+    font-size: 1em;
+}
+
+li {
+    font-size: 1.6rem;
+}
+
+pre,
+code {
+    font-size: 1.4rem;
+}
+dl,
+dt,
+dd {
+    font-size: 1.4rem;
+}
+p, 
+span, 
+textarea, 
+input,
+label
+ {
+    font-size: 1.6rem;
+}
+a {
+    font-size: 1.6rem;
+}
+
+button {
+    font-size: 1.6rem;
+}
+
+select,
+option {
+    /* appearance: none; */
+    font-size: 1.6rem;
+}
+
+table,
+tr,
+th,
+td {
+    font-size: 1.6rem;
+}
+
+
+i,
+b {
+    font-size: 1.6rem;
+}
+mark {
+    font-size: 1.6rem;
+}
+
+
+summary,
+details {
+    font-size: 1.6rem;
+}
+
+q,
+cite,
+blockquote {
+    font-size: 1.6rem;
+}
+
+data,
+samp {
+    font-size: 1.6rem;
+}
+
+wbr,
+small {
+    font-size: 1.6rem;
+}
+
+dfn {
+    font-size: 1.6rem;
+
+}
+figure,
+figcaption {
+    font-size: 1.6rem;
+
+}

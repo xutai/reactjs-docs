@@ -1,0 +1,265 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                ReactDOM
+            </h1>
+        </section>
+
+        <section>
+            <p>If you load React from a &lt;script&gt; tag, these top-level APIs are available on the ReactDOM global. If you use ES6 with npm, you can write import ReactDOM from &apos;react-dom&apos;. If you use ES5 with npm, you can write var ReactDOM = require(&apos;react-dom&apos;).</p>
+        </section>
+        <section>
+            <ul>
+                <li>overview</li>
+                <ul>
+                    <li>browser-support</li>
+                </ul>
+                <li>reference</li>
+                <ul>
+                    <li>render()</li>
+                    <li>hydrate()</li>
+                    <li>unmountComponentAtNode()</li>
+                    <li>findDOMNode()</li>
+                    <li>createPortal()</li>
+                </ul>
+            </ul>
+        </section>
+        
+        <section>
+            <h2 id="overview">Overview</h2>
+            <p>The react-dom package provides DOM-specific methods that can be used at the top level of your app and as an escape hatch to get outside of the React model if you need to. Most of your components should not need to use this module.</p>
+            <ul>
+                <li>render()</li>
+                <li>hydrate()</li>
+                <li>unmountComponentAtNode()</li>
+                <li>findDOMNode()</li>
+                <li>createPortal()</li>
+            </ul>
+            <section>
+                <h3 id="browser-support">Browser Support</h3>
+                <p>React supports all popular browsers, including Internet Explorer 9 and above, although some polyfills are required for older browsers such as IE 9 and IE 10.</p>
+                <p class="warning">We don’t support older browsers that don’t support ES5 methods, but you may find that your apps do work in older browsers if polyfills such as es5-shim and es5-sham are included in the page. You’re on your own if you choose to take this path.</p>
+            </section>
+        </section>
+        <section>
+            <h2 id="reference">Reference</h2>
+            <section>
+                <h3 id="render()">render()</h3>
+                <pre><code>
+        ReactDOM.render(element, container[, callback])
+                </code></pre>
+                <p>Render a React element into the DOM in the supplied container and return a reference to the component (or returns null for stateless components).</p>
+                <p>If the React element was previously rendered into container, this will perform an update on it and only mutate vt. 改变，使突变 the DOM as necessary to reflect the latest React element.</p>
+                <p>If the optional callback is provided, it will be executed after the component is rendered or updated.</p>
+                <p class="warning">Note:
+                    ReactDOM.render() controls the contents of the container node you pass in. Any existing DOM elements inside are replaced when first called. Later calls use React’s DOM diffing 比较文件的差异 algorithm for efficient updates.
+                    <br>
+                    <br>
+                    ReactDOM.render() does not modify the container node (only modifies the children of the container). It may be possible to insert a component to an existing DOM node without overwriting the existing children.
+                    <br>
+                    <br>
+                    ReactDOM.render() currently returns a reference to the root ReactComponent instance. However, using this return value is legacy and should be avoided because future versions of React may render components asynchronously in some cases. If you need a reference to the root ReactComponent instance, the preferred solution is to attach a callback ref to the root element.
+                    <br>
+                    <br>
+                    Using ReactDOM.render() to hydrate （使）水合； a server-rendered container is deprecated and will be removed in React 17. Use hydrate() instead.</p>
+            </section>
+            <section>
+                <h3 id="hydrate()">hydrate()</h3>
+                <pre><code>
+ReactDOM.hydrate(element, container[, callback])
+                </code></pre>
+                <p>Same as render(), but is used to hydrate a container whose HTML contents were rendered by ReactDOMServer. React will attempt to attach event listeners to the existing markup.</p>
+                <p>React expects that the rendered content is identical between the server and the client. It can patch up differences in text content, but you should treat mismatches as bugs and fix them. In development mode, React warns about mismatches during hydration. There are no guarantees that attribute differences will be patched up in case of mismatches. This is important for performance reasons because in most apps, mismatches are rare, and so validating all markup would be prohibitively expensive.</p>
+                <p>If a single element’s attribute or text content is unavoidably different between the server and the client (for example, a timestamp), you may silence the warning by adding suppressHydrationWarning={true} to the element. It only works one level deep, and is intended to be an escape hatch. Don’t overuse it. Unless it’s text content, React still won’t attempt to patch it up, so it may remain inconsistent until future updates.</p>
+                <p>If you intentionally need to render something different on the server and the client, you can do a two-pass rendering. Components that render something different on the client can read a state variable like this.state.isClient, which you can set to true in componentDidMount(). This way the initial render pass will render the same content as the server, avoiding mismatches, but an additional pass will happen synchronously right after hydration. Note that this approach will make your components slower because they have to render twice, so use it with caution.</p>
+                <p>Remember to be mindful of user experience on slow connections. The JavaScript code may load significantly later than the initial HTML render, so if you render something different in the client-only pass, the transition can be jarring. However, if executed well, it may be beneficial to render a “shell” of the application on the server, and only show some of the extra widgets on the client. To learn how to do this without getting the markup mismatch issues, refer to the explanation in the previous paragraph.</p>
+            </section>
+            <section>
+                <h3 id="unmountComponentAtNode()">unmountComponentAtNode()</h3>
+                <pre><code>
+ReactDOM.unmountComponentAtNode(container)
+                </code></pre>
+                <p>Remove a mounted React component from the DOM and clean up its event handlers and state. If no component was mounted in the container, calling this function does nothing. Returns true if a component was unmounted and false if there was no component to unmount.</p>
+            </section>
+            <section>
+                <h3 id="findDOMNode()">findDOMNode()</h3>
+                <p class="warning">findDOMNode is an escape hatch used to access the underlying DOM node. In most cases, use of this escape hatch is discouraged because it pierces the component abstraction. It has been deprecated in StrictMode.</p>
+                <pre><code>
+                    ReactDOM.findDOMNode(component)
+                </code></pre>
+                <p>If this component has been mounted into the DOM, this returns the corresponding native browser DOM element. This method is useful for reading values out of the DOM, such as form field values and performing DOM measurements. In most cases, you can attach a ref to the DOM node and avoid using findDOMNode at all.</p>
+                <p>When a component renders to null or false, findDOMNode returns null. When a component renders to a string, findDOMNode returns a text DOM node containing that value. As of React 16, a component may return a fragment with multiple children, in which case findDOMNode will return the DOM node corresponding to the first non-empty child.</p>
+                <p class="warning">
+                    findDOMNode only works on mounted components (that is, components that have been placed in the DOM). If you try to call this on a component that has not been mounted yet (like calling findDOMNode() in render() on a component that has yet to be created) an exception will be thrown.
+<br><br>
+findDOMNode cannot be used on function components.
+                </p>
+            </section>
+            <section>
+                <h3 id="createPortal()">createPortal()</h3>
+                <pre><code>
+                    ReactDOM.createPortal(child, container)
+                </code></pre>
+                <p>Creates a portal. Portals provide a way to render children into a DOM node that exists outside the hierarchy of the DOM component.</p>
+            </section>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#overview',
+                    href: '#overview',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#browser-support',
+                            href: '#browser-support',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#reference',
+                    href: '#reference',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#render()',
+                            href: '#render()',
+                        },
+                        {
+                            key: 2,
+                            text: '#hydrate()',
+                            href: '#hydrate()',
+                        },
+                        {
+                            key: 3,
+                            text: '#unmountComponentAtNode()',
+                            href: '#unmountComponentAtNode()',
+                        },
+                        {
+                            key: 4,
+                            text: '#findDOMNode()',
+                            href: '#findDOMNode()',
+                        },
+                        {
+                            key: 5,
+                            text: '#createPortal()',
+                            href: '#createPortal()',
+                        },
+                    ]
+                },
+
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+                id: 1,
+                title: 'Learn React',
+                content: 'React is sky blue!'
+            },
+            {
+                id: 2,
+                title: 'Learn Vue',
+                content: 'Vue is mood Green!'
+            }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+

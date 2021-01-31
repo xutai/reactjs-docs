@@ -1,0 +1,369 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                React Without ES6
+            </h1>
+        </section>
+
+        <section>
+            <ul>
+                <li>declaring-default-props</li>
+                <li>setting-the-initial-state</li>
+                <li>autobinding</li>
+                <li>mixins</li>
+            </ul>
+        </section>
+        <section>
+            <p>Normally you would define a React component as a plain JavaScript class:</p>
+            <pre><code>
+class Greeting extends React.Component {
+    render() {
+        return &lt;h1&gt;Hello, {this.props.name}&lt;/h1&gt;;
+    }
+}
+            </code></pre>
+            <p>If you don’t use ES6 yet, you may use the create-react-class module instead:</p>
+            <pre><code>
+var createReactClass = require(&apos;create-react-class&apos;);
+var Greeting = createReactClass({
+  render: function() {
+    return &lt;h1&gt;Hello, {this.props.name}&lt;/h1&gt;;
+  }
+});
+            </code></pre>
+            <p>The API of ES6 classes is similar to createReactClass() with a few exceptions.</p>
+        </section>
+        <section>
+            <h2 id="declaring-default-props">declaring-default-props</h2>
+            <p>With functions and ES6 classes defaultProps is defined as a property on the component itself:</p>
+            <pre><code>
+class Greeting extends React.Component {
+    // ...
+}
+    
+Greeting.defaultProps = {
+    name: 'Mary'
+};
+            </code></pre>
+            <p>With createReactClass(), you need to define getDefaultProps() as a function on the passed object:</p>
+            <pre><code>
+var Greeting = createReactClass({
+    getDefaultProps: function() {
+        return {
+        name: 'Mary'
+        };
+    },
+    
+    // ...
+    
+});
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="setting-the-initial-state">setting-the-initial-state</h2>
+            <p>In ES6 classes, you can define the initial state by assigning this.state in the constructor:</p>
+            <pre><code>
+class Counter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {count: props.initialCount};
+}
+// ...
+}
+            </code></pre>
+            <p>With createReactClass(), you have to provide a separate getInitialState method that returns the initial
+                state:</p>
+            <pre><code>
+var Counter = createReactClass({
+    getInitialState: function() {
+        return {count: this.props.initialCount};
+    },
+    // ...
+});
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="autobinding">autobinding</h2>
+            <p>In React components declared as ES6 classes, methods follow the same semantics as regular ES6 classes.
+                This means that they don’t automatically bind this to the instance. You’ll have to explicitly use
+                .bind(this) in the constructor:</p>
+            <pre><code>
+class SayHello extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {message: &apos;Hello!&apos;};
+        // This line is important!
+        this.handleClick = this.handleClick.bind(this);
+    }
+    
+    handleClick() {
+        alert(this.state.message);
+    }
+    
+    render() {
+        // Because &grave;this.handleClick&grave; is bound, we can use it as an event handler.
+        return (
+        &lt;button onClick={this.handleClick}&gt;
+            Say hello
+        &lt;/button&gt;
+        );
+    }
+}
+            </code></pre>
+            <p>With createReactClass(), this is not necessary because it binds all methods:</p>
+            <pre><code>
+var SayHello = createReactClass({
+    getInitialState: function() {
+        return {message: &apos;Hello!&apos;};
+    },
+    
+    handleClick: function() {
+        alert(this.state.message);
+    },
+    
+    render: function() {
+        return (
+        &lt;button onClick={this.handleClick}&gt;
+            Say hello
+        &lt;/button&gt;
+        );
+    }
+});
+            </code></pre>
+            <p>This means writing ES6 classes comes with a little more boilerplate code for event handlers, but the
+                upside is slightly better performance in large applications.</p>
+            <p>If the boilerplate code is too unattractive to you, you may enable the experimental Class Properties
+                syntax proposal with Babel:</p>
+            <pre><code>
+class SayHello extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {message: &apos;Hello!&apos;};
+    }
+    // WARNING: this syntax is experimental!
+    // Using an arrow here binds the method:
+    handleClick = () =&gt; {
+        alert(this.state.message);
+    }
+    
+    render() {
+        return (
+        &lt;button onClick={this.handleClick}&gt;
+            Say hello
+        &lt;/button&gt;
+        );
+    }
+}
+            </code></pre>
+            <p>Please note that the syntax above is experimental and the syntax may change, or the proposal might not
+                make it into the language.</p>
+            <p>If you’d rather play it safe, you have a few options:</p>
+            <ul>
+                <li>Bind methods in the constructor.</li>
+                <li>Use arrow functions, e.g. onClick={(e) =&gt; this.handleClick(e)}.</li>
+                <li>Keep using createReactClass.</li>
+            </ul>
+        </section>
+        <section>
+            <h2 id="mixins">mixins</h2>
+            <p class="info">
+                <br>
+                ES6 launched without any mixin support. Therefore, there is no support for mixins when you use React
+                with ES6 classes.
+                <br><br>
+                We also found numerous issues in codebases using mixins, and don’t recommend using them in the new code.
+                <br><br>
+                This section exists only for the reference.
+            </p>
+            <p>Sometimes very different components may share some common functionality. These are sometimes called cross-cutting concerns. createReactClass lets you use a legacy mixins system for that.</p>
+            <p>One common use case is a component wanting to update itself on a time interval. It’s easy to use setInterval(), but it’s important to cancel your interval when you don’t need it anymore to save memory. React provides lifecycle methods that let you know when a component is about to be created or destroyed. Let’s create a simple mixin that uses these methods to provide an easy setInterval() function that will automatically get cleaned up when your component is destroyed.</p>
+            <pre><code>
+var SetIntervalMixin = {
+    componentWillMount: function() {
+        this.intervals = [];
+    },
+    setInterval: function() {
+        this.intervals.push(setInterval.apply(null, arguments));
+    },
+    componentWillUnmount: function() {
+        this.intervals.forEach(clearInterval);
+    }
+    };
+    
+    var createReactClass = require(&apos;create-react-class&apos;);
+    
+    var TickTock = createReactClass({
+    mixins: [SetIntervalMixin], // Use the mixin
+    getInitialState: function() {
+        return {seconds: 0};
+    },
+    componentDidMount: function() {
+        this.setInterval(this.tick, 1000); // Call a method on the mixin
+    },
+    tick: function() {
+        this.setState({seconds: this.state.seconds + 1});
+    },
+    render: function() {
+        return (
+        &lt;p&gt;
+            React has been running for {this.state.seconds} seconds.
+        &lt;/p&gt;
+        );
+    }
+    });
+    
+    ReactDOM.render(
+    &lt;TickTock /&gt;,
+    document.getElementById(&apos;example&apos;)
+    );
+            </code></pre>
+            <p>If a component is using multiple mixins and several mixins define the same lifecycle method (i.e. several mixins want to do some cleanup when the component is destroyed), all of the lifecycle methods are guaranteed to be called. Methods defined on mixins run in the order mixins were listed, followed by a method call on the component.</p>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                { 
+                    key: 1, 
+                    text: '#declaring-default-props', 
+                    href: '#declaring-default-props' },
+                    { 
+                    key: 2, 
+                    text: '#setting-the-initial-state', 
+                    href: '#setting-the-initial-state' },
+                    { 
+                    key: 3, 
+                    text: '#autobinding', 
+                    href: '#autobinding' },
+                    { 
+                    key: 4, 
+                    text: '#mixins', 
+                    href: '#mixins' },
+            ]
+            const listItems = Items.map((item) =>
+                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+                id: 1,
+                title: 'Learn React',
+                content: 'React is sky blue!'
+            },
+            {
+                id: 2,
+                title: 'Learn Vue',
+                content: 'Vue is mood Green!'
+            }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

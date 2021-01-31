@@ -1,0 +1,370 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Building Your Own Hooks
+            </h1>
+        </section>
+
+
+        <section>
+            <p class="key">Building your own Hooks lets you extract component logic into reusable functions.</p>
+            <p>we’ve had two popular ways to share stateful logic between components: render props and higher-order
+                components. </p>
+            <p>how Hooks solve many of the same problems without forcing you to add more components to the tree.</p>
+        </section>
+        <section>
+            <ul>
+                <li>extracting-a-custom-hook</li>
+                <li>using-a-custom-hook</li>
+                <ul>
+                    <li>tip-pass-information-between-hooks</li>
+                </ul>
+                <li class="key">useYourImagination()</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 id="extracting-a-custom-hook">extracting-a-custom-hook</h2>
+            <p>
+                <strong>A custom Hook is a JavaScript function whose name starts with ”use” and that may call other
+                    Hooks. </strong>
+            </p>
+        </section>
+        <section>
+            <h2 id="using-a-custom-hook">using-a-custom-hook</h2>
+            <p>
+                <strong>Is this code equivalent to the original examples? </strong>
+            </p>
+            <p>
+                <strong>Do I have to name my custom Hooks starting with “use”? </strong>
+            </p>
+            <p>
+                <strong>Do two components using the same Hook share state? </strong>
+            </p>
+            <p>
+                <strong>How does a custom Hook get isolated state?</strong>
+            </p>
+            <section>
+                <h3 id="tip-pass-information-between-hooks">tip-pass-information-between-hooks</h3>
+            </section>
+        </section>
+        <section>
+            <h2 id="useYourImagination()">useYourImagination()</h2>
+            <p>use cases</p>
+            <p>Try to resist adding abstraction too early. </p>
+            <p>hooks or redux reducer? maybe you have a complex component that contains a lot of local state that is managed in an ad-hoc way. useState doesn’t make centralizing the update logic any easier so you might prefer to write it as a Redux reducer</p>
+            <pre><code>
+function todosReducer(state, action) {
+    switch (action.type) {
+        case 'add':
+        return [...state, {
+            text: action.text,
+            completed: false
+        }];
+        // ... other actions ...
+        default:
+        return state;
+    }
+}
+            </code></pre>
+            <p>Reducers are very convenient to test in isolation, and scale to express complex update logic. </p>
+            <p>write a useReducer Hook that lets us manage the local state of our component with a reducer?</p>
+            <pre><code>
+function useReducer(reducer, initialState) {
+    const [state, setState] = useState(initialState);
+    
+    function dispatch(action) {
+        const nextState = reducer(state, action);
+        setState(nextState);
+    }
+    
+    return [state, dispatch];
+}
+            </code></pre>
+            <p>use it in our component, and let the reducer drive its state management:</p>
+            <pre><code>
+function Todos() {
+    const [todos, dispatch] = useReducer(todosReducer, []);
+    function handleAddClick(text) {
+        dispatch({ type: 'add', text });
+    }
+    
+    // ...
+}
+            </code></pre>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#extracting-a-custom-hook',
+                    href: '#extracting-a-custom-hook',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#using-a-custom-hook',
+                    href: '#using-a-custom-hook',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#tip-pass-information-between-hooks',
+                            href: '#tip-pass-information-between-hooks',
+                        }
+                    ]
+                },
+                {
+                    key: 3,
+                    text: '#useYourImagination()',
+                    href: '#useYourImagination()',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+    // v1
+    // function FriendStatus(props) {
+    //     const [isOnline, setIsOnline] = useState(null);
+    //     useEffect(() => {
+    //         function handleStatusChange(status) {
+    //             setIsOnline(status.isOnline);
+    //         }
+    //         ChatAPI.subscribeToFriendStatus(
+    //             props.friend.id,
+    //             handleStatusChange
+    //         );
+    //         return () => {
+    //             ChatAPI.unsubscribeFromFriendStatus(
+    //                 props.friend.id,
+    //                 handleStatusChange
+    //             );
+    //         };
+    //     });
+    //     if (isOnline === null) {
+    //         return 'Loading...';
+    //     }
+    //     return isOnline ? 'Online' : 'Offline';
+    // }
+
+    // v1
+    // function FriendListItem(props) {
+    //     const [isOnline, setIsOnline] = useState(null);
+    //     useEffect(() => {
+    //         function handleStatusChange(status) {
+    //             setIsOnline(status.isOnline);
+    //         }
+    //         ChatAPI.subscribeToFriendStatus(
+    //             props.friend.id, handleStatusChange
+    //         );
+    //         return () => {
+    //             ChatAPI.unsubscribeFromFriendStatus(
+    //                 props.friend.id,
+    //                 handleStatusChange
+    //             );
+    //         };
+    //     });
+    //     return (
+    //         <li style={{ color: isOnline ? 'green' : 'black' }}>
+    //             {props.friend.name}
+    //         </li>
+    //     );
+    // }
+
+
+    // v2 extracting-a-custom-hook
+    function useFriendStatus(friendID) {
+        const [isOnline, setIsOnline] = useState(null);
+
+        useEffect(() => {
+            function handleStatusChange(status) {
+                setIsOnline(status.isOnline);
+            }
+
+            ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+            return () => {
+                ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+            };
+        });
+
+        return isOnline;
+    }
+
+    // v3 using-a-custom-hook
+    function FriendStatus(props) {
+        const isOnline = useFriendStatus(props.friend.id);
+        if (isOnline === null) {
+            return 'Loading...';
+        }
+        return isOnline ? 'Online' : 'Offline';
+    }
+
+    function FriendListItem(props) {
+        const isOnline = useFriendStatus(props.friend.id);
+        return (
+            <li style={{ color: isOnline ? 'green' : 'black' }}>
+                {props.friend.name}
+            </li>
+        );
+    }
+
+
+    // v4 Tip: Pass Information Between Hooks 
+    const friendList = [
+        { id: 1, name: 'Phoebe' },
+        { id: 2, name: 'Rachel' },
+        { id: 3, name: 'Ross' },
+    ];
+
+    function ChatRecipientPicker() {
+        const [recipientID, setRecipientID] = useState(1);
+        const isRecipientOnline = useFriendStatus(recipientID);
+        return (
+            <>
+                <Circle color={isRecipientOnline ? 'green' : 'red'} />
+                <select
+                    value={recipientID}
+                    onChange={e => setRecipientID(Number(e.target.value))}
+                >
+                    {friendList.map(friend => (
+                        <option key={friend.id} value={friend.id}>
+                            {friend.name}
+                        </option>
+                    ))}
+                </select>
+            </>
+        );
+    }
+
+
+
+
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

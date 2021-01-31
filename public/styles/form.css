@@ -1,0 +1,272 @@
+/* singup */
+
+/* button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+  } */
+
+form {
+    /* Center the form on the page */
+    margin: 0 auto;
+    width: 400px;
+    /* Form outline */
+    padding: 2em 1em;
+    border: 1px solid #CCC;
+    /* border-radius: 1em; */
+    border-radius: 1em;
+}
+form.login {
+    width: 300px;
+}
+
+/*  login  */
+.loginStatusMessage { 
+    padding: 1.5em 0 ; 
+    margin: 0 auto 10px;
+    background-color: #ffe3e6;
+    border-radius: 1em;
+    display: none;
+}
+.loginStatusMessage > div {
+ 
+}
+.loginStatusMessage > div > button { 
+    float: right;
+    appearance: button;
+    -webkit-appearance: button;
+    border: 0;
+    background: none;
+    outline: none;
+    text-align: center;
+    /* text-transform: none; */
+    /* overflow: visible; */
+    /* padding: 16px;
+    margin: -16px; */
+    transform: translateY(-8px);
+}
+.loginStatusMessage > div > button:hover {
+    opacity: .7;
+   
+}
+.loginStatusMessage > div > button  > span {
+    color: #c56c71;
+}
+
+
+label {
+    display: block;
+    /* Uniform size & alignment */
+    /* display: inline-block;
+     width: 90px;
+     text-align: right; */
+     width: 100%;
+}
+
+input, textarea {
+    /* To make sure that all text fields have the same font settings
+     By default, textareas have a monospace font */
+    /* font: 1em sans-serif; */
+
+    /* Uniform text field size */
+    /* width: 300px;
+    box-sizing: border-box; */
+    
+    /* Match form field borders */
+    /* border: 1px solid #999; */
+    border: 1px solid #ddd;
+    border-radius: 0.45em;
+    padding: 0.3em 0.6em;
+    width: 100%;
+    display: block;
+    background-color: #fafbfc;
+}
+
+/* form.header > * {
+    display: block;
+}
+ */
+
+
+input:focus, 
+textarea:focus {
+  /* Additional highlight for focused elements */
+  /* border-color: #000; */
+  border-color:lightblue;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0.4em;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(3, 102, 214, .3);
+}
+
+textarea {
+    /* Align multiline text fields with their labels */
+    vertical-align: top;
+  
+    /* Provide space to type some text */
+    /* height: 5em; */
+  }
+
+  
+.button {
+    /* Align buttons with the text fields */
+    /* padding-left: 90px; same size as the label elements */
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    display: block;
+    padding: 0.8em 4em;
+    border-radius: 0.4em;
+    outline: none;
+    background-color: #86b8f2;
+    border: none;
+    font-size: 1.2em;
+    color: #c2d7f6;
+    
+  }
+  .button.validated {
+    /* Align buttons with the text fields */
+    /* padding-left: 90px; same size as the label elements */
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    display: block;
+    padding: 0.8em 4em;
+    border-radius: 0.4em;
+    outline: none;
+    background-color: #1074e7;
+    border: none;
+    font-size: 1.2em;
+    color: #ffffff;
+    
+  }
+  
+  legend {
+      /* display: none; */
+  }
+  fieldset {
+      padding: 0;
+      margin: 0;
+      border: none;
+  }
+ abbr.label {
+      /* display: none; */
+      border-bottom: 0;
+      border-bottom-style: none;
+      border-bottom-width: 0px;
+      border-bottom-color: red;
+      border-bottom: none;
+      color: #cf8ade;
+  }
+  h2.form {
+      display: none;
+  }
+  form ul {
+      list-style-type: none;
+
+          /* ul default browser styles list-style:circle  */
+    list-style: none;
+    /* ul default browser styles left-padding 40px */
+    padding: 0;
+  }
+.form-note,
+.form-note a {
+    font-size: 1rem;;
+}
+
+
+
+
+
+
+
+
+
+/* ||checkbox */
+input[type="checkbox"]:default {
+    /* -webkit-appearance: none; */
+    /* appearance: none; */
+    /* width: 44px; */
+    /* height: 24px; */
+    /* border-radius: 12px; */
+    /* border: 2px solid black; */
+    /* background: #eee; */
+    /* transition: all 0.4s; */
+}
+input[type="checkbox"]:checked {
+    /* -webkit-appearance: none; */
+    /* appearance: none; */
+    /* width: 44px; */
+    /* height: 24px; */
+    border-radius: 12px;
+    border: 2px solid black;
+    background: #eee;
+    /* transition: all 0.4s; */
+}
+/* ||radio */
+input[type="radio"]:default {
+    background-color: lightcoral;
+    color: red;
+}
+input[type="radio"]:checked {
+    background-color: lightcoral;
+    color: red;
+}
+
+
+
+
+
+
+
+
+/* validation */
+input:invalid {
+    /* border: 2px dashed red; */
+    border-color: #900;
+    background-color: #FDD;
+}
+input:focus:invalid {
+    outline: none;
+  }
+input:invalid:required {
+    /* background-image: linear-gradient(to right, pink, lightgreen); */
+}
+input:valid {
+    /* border: 2px solid black; */
+    border: 2px solid green;
+}
+
+/* validation */
+form.login input:invalid {
+    border-color: #eee;
+    background-color: #fff;
+}
+form.login input:focus:invalid {
+    outline: none;
+  }
+form.login input:invalid:required {
+    /* background-image: linear-gradient(to right, pink, lightgreen); */
+ 
+}
+form.login input:valid {
+    border: none;
+}
+
+/* This is the style of our error messages */
+.error {
+    width  : 100%;
+    padding: 0;
+  
+    /* font-size: 80%; */
+    font-size: 100%;
+    color: white;
+    background-color: #900;
+    border-radius: 0 0 5px 5px;
+  
+    box-sizing: border-box;
+  }
+  .error.active {
+    /* padding: 0.3em; */
+    padding: 0.5em;
+  }

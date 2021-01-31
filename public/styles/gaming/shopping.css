@@ -1,0 +1,30 @@
+.shopping-cart {
+    margin: 0 0 20px 0;
+    border: 1px solid whitesmoke;
+}
+
+
+.shopping-cart-ul {
+    display: grid;
+    /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+    /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
+    grid-template-columns: repeat(1fr, minmax(200px, 1fr));
+    grid-auto-rows: minmax(auto, auto);
+    grid-gap: 20px;
+    gap: 20px;
+
+
+}
+
+.shopping-cart-ul > div{ 
+    display: grid;
+    /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; */
+    grid-template-columns: auto auto auto auto auto auto auto;
+    /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
+    /* grid-template-columns: repeat(1fr, minmax(auto, 1fr)); */
+    grid-auto-rows: minmax(auto, auto);
+    grid-gap: 20px;
+    gap: 20px;
+
+
+}

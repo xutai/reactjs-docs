@@ -1,0 +1,23 @@
+
+/* @support syntax */
+
+/* 
+
+@supports (flex-flow: row) and (flex: 1) {
+
+  main {
+    display: flex;
+  }
+
+  main div {
+    padding-right: 4%;
+    flex: 1;
+  }
+
+  main div:last-child {
+    padding-right: 0;
+  }
+
+}
+
+*/

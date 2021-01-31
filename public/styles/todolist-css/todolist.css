@@ -1,0 +1,31 @@
+table,
+caption,
+colgroup,
+col,
+thead,
+tbody,
+tr,
+th,
+td,
+tfoot {
+    font-size: 1em;
+}
+
+caption {
+    font-size: 2em;
+}
+
+ th, td {
+    font-size: 1.6em;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #aaaaaa;
+    text-align: center;
+}

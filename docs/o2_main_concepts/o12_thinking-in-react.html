@@ -1,0 +1,561 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Thinking in React
+            </h1>
+        </section>
+
+        <section>
+            <p>React is, in our opinion, the premier 第一的；首要的； way to build big, fast Web apps with JavaScript. It has
+                scaled very well for us at Facebook and Instagram.</p>
+            <p>One of the many great parts of React is how it makes you think about apps as you build them. In this
+                document, we’ll walk you through the thought process of building a searchable product data table using
+                React.</p>
+        </section>
+        <section>
+            <h2 id="start-with-a-mock">start-with-a-mock</h2>
+            <p>Imagine that we already have a JSON API and a mock from our designer. The mock looks like this:</p>
+            <mark>pretend here is an image here</mark>
+            <p>Our JSON API returns some data that looks like this:</p>
+            <pre><code>
+[
+  {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+  {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+  {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+  {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+  {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+  {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
+];
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="step-1-break-the-ui-into-a-component-hierarchy">step-1-break-the-ui-into-a-component-hierarchy</h2>
+            <p>The first thing you’ll want to do is to draw boxes around every component (and subcomponent) in the mock
+                and give them all names. If you’re working with a designer, they may have already done this, so go talk
+                to them! Their Photoshop layer names may end up being the names of your React components!</p>
+            <p>But how do you know what should be its own component? Use the same techniques for deciding if you should
+                create a new function or object. One such technique is the single responsibility principle, that is, a
+                component should ideally only do one thing. If it ends up growing, it should be decomposed vt. 分解； into
+                smaller subcomponents.</p>
+            <mark>pretend here is an image here</mark>
+            <p>You’ll see here that we have five components in our app. We’ve italicized 用斜体字印刷 the data each component
+                represents.</p>
+            <ul>
+                <li>FilterableProductTable (orange): contains the entirety n. 全部；完全 of the example</li>
+                <li>SearchBar (blue): receives all user input</li>
+                <li>ProductTable (green): displays and filters the data collection based on user input</li>
+                <li>ProductCategoryRow (turquoise n. 绿松石；蓝绿色): displays a heading for each category</li>
+                <li>ProductRow (red): displays a row for each product</li>
+            </ul>
+            <p>If you look at ProductTable, you’ll see that the table header (containing the “Name” and “Price” labels)
+                isn’t its own component. This is a matter of preference, and there’s an argument to be made either way.
+                For this example, we left it as part of ProductTable because it is part of rendering the data collection
+                which is ProductTable’s responsibility. However, if this header grows to be complex (e.g., if we were to
+                add affordances n. 功能可见性； for sorting), it would certainly make sense to make this its own
+                ProductTableHeader component.</p>
+            <p>Now that we’ve identified the components in our mock, let’s arrange them into a hierarchy. Components
+                that appear within another component in the mock should appear as a child in the hierarchy:</p>
+            <ul>
+                <li>FilterableProductTable</li>
+                <ul>
+                    <li>SearchBar</li>
+                    <li>ProductTable</li>
+                    <ul>
+                        <li>ProductCategoryRow</li>
+                        <li>ProductRow</li>
+                    </ul>
+                </ul>
+            </ul>
+        </section>
+        <section>
+            <h2 id="step-2-build-a-static-version-in-react">step-2-build-a-static-version-in-react</h2>
+            <p>See the Pen Thinking In React: Step 2 on CodePen.</p>
+            <p>Now that you have your component hierarchy, it’s time to implement your app. The easiest way is to build
+                a version that takes your data model and renders the UI but has no interactivity. It’s best to decouple
+                these processes because building a static version requires a lot of typing and no thinking, and adding
+                interactivity requires a lot of thinking and not a lot of typing. We’ll see why.</p>
+            <p>To build a static version of your app that renders your data model, you’ll want to build components that
+                reuse other components and pass data using props. props are a way of passing data from parent to child.
+                If you’re familiar with the concept of state, don’t use state at all to build this static version. <span
+                    class="key">State is reserved only for interactivity, that is, data that changes over time.</span>
+                Since this is a static version of the app, you don’t need it.</p>
+            <p>You can build top-down or bottom-up. That is, you can either start with building the components higher up
+                in the hierarchy (i.e. starting with FilterableProductTable) or with the ones lower in it (ProductRow).
+                In simpler examples, it’s usually easier to go top-down, and on larger projects, it’s easier to go
+                bottom-up and write tests as you build.</p>
+            <p>At the end of this step, you’ll have a library of reusable components that render your data model. The
+                components will only have render() methods since this is a static version of your app. The component at
+                the top of the hierarchy (FilterableProductTable) will take your data model as a prop. If you make a
+                change to your underlying data model and call ReactDOM.render() again, the UI will be updated. You can
+                see how your UI is updated and where to make changes. React’s one-way data flow (also called one-way
+                binding) keeps everything modular and fast.</p>
+            <p>Refer to the React docs if you need help executing this step</p>
+        </section>
+        <section>
+            <h3 id="a-brief-interlude-props-vs-state">a-brief-interlude-props-vs-state</h3>
+            <p>interlude n. 插曲；穿插；幕间节目；</p>
+            <p>There are two types of “model” data in React: props and state. It’s important to understand the
+                distinction between the two; skim the official React docs if you aren’t sure what the difference is. See
+                also FAQ: What is the difference between state and props?</p>
+        </section>
+        <section>
+            <h2 id="step-3-identify-the-minimal-but-complete-representation-of-ui-state">
+                step-3-identify-the-minimal-but-complete-representation-of-ui-state</h2>
+            <p>To make your UI interactive, you need to be able to trigger changes to your underlying data model. React
+                achieves this with state.</p>
+            <p>To build your app correctly, you first need to think of the minimal set of mutable state that your app
+                needs. The key here is DRY adj. 干的；枯燥无味的: Don’t Repeat Yourself. Figure out the absolute minimal
+                representation of the state your application needs and compute everything else you need on-demand. For
+                example, if you’re building a TODO list, keep an array of the TODO items around; don’t keep a separate
+                state variable for the count. Instead, when you want to render the TODO count, take the length of the
+                TODO items array.</p>
+            <p>Think of all of the pieces of data in our example application. We have:</p>
+            <ul>
+                <li>The original list of products</li>
+                <li>The search text the user has entered</li>
+                <li>The value of the checkbox</li>
+                <li>The filtered list of productsc</li>
+            </ul>
+            <p>Let’s go through each one and figure out which one is state. Ask three questions about each piece of
+                data:</p>
+            <ul>
+                <li>Is it passed in from a parent via props? If so, it probably isn’t state.</li>
+                <li>Does it remain unchanged over time? If so, it probably isn’t state.</li>
+                <li>Can you compute it based on any other state or props in your component? If so, it isn’t state.</li>
+            </ul>
+            <p>The original list of products is passed in as props, so that’s not state. The search text and the
+                checkbox seem to be state since they change over time and can’t be computed from anything. And finally,
+                the filtered list of products isn’t state because it can be computed by combining the original list of
+                products with the search text and value of the checkbox.</p>
+            <p>So finally, our state is:</p>
+            <ul>
+                <li>The search text the user has entered</li>
+                <li>The value of the checkbox</li>
+            </ul>
+        </section>
+        <section>
+            <h2 id="step-4-identify-where-your-state-should-live">step-4-identify-where-your-state-should-live</h2>
+            <p>See the Pen Thinking In React: Step 4 on CodePen.</p>
+            <p>OK, so we’ve identified what the minimal set of app state is. Next, we need to identify which component
+                mutates, or owns, this state.</p>
+            <p>Remember: React is all about one-way data flow down the component hierarchy. It may not be immediately
+                clear which component should own what state. This is often the most challenging part for newcomers to
+                understand, so follow these steps to figure it out:</p>
+            <p>For each piece of state in your application:</p>
+            <ul>
+                <li>Identify every component that renders something based on that state.</li>
+                <li>Find a common owner component (a single component above all the components that need the state in
+                    the hierarchy).</li>
+                <li>Either the common owner or another component higher up in the hierarchy should own the state.</li>
+                <li>If you can’t find a component where it makes sense to own the state, create a new component solely
+                    for holding the state and add it somewhere in the hierarchy above the common owner component.</li>
+            </ul>
+            <p>Let’s run through this strategy for our application:</p>
+            <ul>
+                <li>ProductTable needs to filter the product list based on state and SearchBar needs to display the
+                    search text and checked state.</li>
+                <li>The common owner component is FilterableProductTable.</li>
+                <li>It conceptually makes sense for the filter text and checked value to live in FilterableProductTable
+                </li>
+            </ul>
+            <p>Cool, so we’ve decided that our state lives in FilterableProductTable. First, add an instance property
+                this.state = {filterText: '', inStockOnly: false} to FilterableProductTable’s constructor to reflect the
+                initial state of your application. Then, pass filterText and inStockOnly to ProductTable and SearchBar
+                as a prop. Finally, use these props to filter the rows in ProductTable and set the values of the form
+                fields in SearchBar.</p>
+            <p>You can start seeing how your application will behave: set filterText to "ball" and refresh your app.
+                You’ll see that the data table is updated correctly.</p>
+        </section>
+        <section>
+            <h2 id="step-5-add-inverse-data-flow">step-5-add-inverse-data-flow</h2>
+            <p>See the Pen Thinking In React: Step 5 on CodePen.</p>
+            <p>So far, we’ve built an app that renders correctly as a function of props and state flowing down the
+                hierarchy. Now it’s time to support data flowing the other way: the form components deep in the
+                hierarchy need to update the state in FilterableProductTable.</p>
+            <p>React makes this data flow explicit to help you understand how your program works, but it does require a
+                little more typing than traditional two-way data binding.</p>
+            <p>If you try to type or check the box in the current version of the example, you’ll see that React ignores
+                your input. This is intentional, as we’ve set the value prop of the input to always be equal to the
+                state passed in from FilterableProductTable.</p>
+            <p>Let’s think about what we want to happen. We want to make sure that whenever the user changes the form,
+                we update the state to reflect the user input. Since <span class="key">components should only update
+                    their own state</span>, FilterableProductTable will pass callbacks to SearchBar that will fire
+                whenever the state should be updated. We can use the onChange event on the inputs to be notified of it.
+                The callbacks passed by FilterableProductTable will call setState(), and the app will be updated.</p>
+        </section>
+        <section>
+            <h2 id="and-thats-it">and-thats-it</h2>
+            <p>Hopefully, this gives you an idea of how to think about building components and applications with React.
+                While it may be a little more typing than you’re used to, remember that code is read far more than it’s
+                written, and it’s less difficult to read this modular, explicit adj. 明确的；清楚的；直率的；详述的 code. As you start
+                to build large libraries of components, you’ll appreciate this explicitness and modularity, and with
+                code reuse, your lines of code will start to shrink. :)</p>
+        </section>
+        <section>
+            <h2 id=""></h2>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#start-with-a-mock',
+                    href: '#start-with-a-mock',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#step-1-break-the-ui-into-a-component-hierarchy',
+                    href: '#step-1-break-the-ui-into-a-component-hierarchy',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#a-brief-interlude-props-vs-state',
+                            href: '#a-brief-interlude-props-vs-state',
+                        }
+                    ]
+                },
+                {
+                    key: 3,
+                    text: '#step-2-build-a-static-version-in-react',
+                    href: '#step-2-build-a-static-version-in-react',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 4,
+                    text: '#step-3-identify-the-minimal-but-complete-representation-of-ui-state',
+                    href: '#step-3-identify-the-minimal-but-complete-representation-of-ui-state',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 5,
+                    text: '#step-4-identify-where-your-state-should-live',
+                    href: '#step-4-identify-where-your-state-should-live',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 6,
+                    text: '#step-5-add-inverse-data-flow',
+                    href: '#step-5-add-inverse-data-flow',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 7,
+                    text: '#and-thats-it',
+                    href: '#and-thats-it',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 8,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+
+            ]
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+<style>
+    /* react */
+    .react-input {
+        display: inline-block !important;
+        width: auto !important;
+    }
+</style>
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [
+            { id: 1, title: 'Learn React', content: 'React is sky blue!' },
+            { id: 2, title: 'Learn Vue', content: 'Vue is mood Green!' }
+        ],
+        products:
+            [
+                { category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football" },
+                { category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball" },
+                { category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball" },
+                { category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch" },
+                { category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5" },
+                { category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7" }
+            ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {
+        }
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    function SearchBar(props) {
+        const filterText = props.filterText
+        const inStockOnly = props.inStockOnly
+        return (
+            <fieldset>
+                <legend>SearchBar</legend>
+                <label>
+                    <input
+                        value={filterText}
+                        onChange={props.callbackFilterText} type="text" />
+                </label>
+                <label>
+                    <input
+                        checked={props.inStockOnly}
+                        onChange={props.callbackIsStockOnly} type="checkbox" name="" id="" className="react-input" /> Only show products in stock
+                </label>
+            </fieldset>
+        )
+    }
+    function ProductCategoryRow(props) {
+        const category = props.category
+        return (
+            <tr>
+                <th colSpan="2">{category}</th>
+            </tr>
+        )
+    }
+    function ProductRow(props) {
+        const product = props.product
+        return (
+            <tr>
+                <td>{product.name}</td>
+                <td>{product.price}</td>
+            </tr>
+        )
+    }
+    function ProductTable(props) {
+        const filteredProducts = props.filteredProducts
+        const categoriesRemovedDuplicate = props.categoriesRemovedDuplicate
+        return (
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                {
+                    categoriesRemovedDuplicate.map(category => {
+                        const products = filteredProducts.map(product => {
+                            if (product.category === category) {
+                                return <ProductRow key={product.name} product={product} />
+                            }
+                        })
+                        return (
+                            <tbody key={category}>
+                                <ProductCategoryRow key={category} category={category} />
+                                {products}
+                            </tbody>
+                        )
+                    })
+                }
+                <tfoot></tfoot>
+            </table>
+        )
+    }
+    class FilterableProductTable extends React.Component {
+        constructor(props) {
+            super(props)
+            this.state = { filterText: '', inStockOnly: false }
+            this.handleCallbackFilterText = this.handleCallbackFilterText.bind(this)
+            this.handleCallbackIsStockOnly = this.handleCallbackIsStockOnly.bind(this)
+        }
+        handleCallbackFilterText(event) {
+            this.setState({ filterText: event.target.value })
+        }
+        handleCallbackIsStockOnly(event) {
+            this.setState({ inStockOnly: event.target.checked })
+        }
+        render() {
+            const products = this.props.products
+            const filterFunc = (product => 
+                product.stocked === this.state.inStockOnly
+                && product.name.toLowerCase().includes(this.state.filterText.toLowerCase()))
+              
+            const filteredProducts = products.filter(filterFunc)
+            const categories = filteredProducts.map(product => product.category)
+            // remove array duplicate
+            const categoriesSet = new Set(categories)
+            const categoriesRemovedDuplicate = []
+            for (let category of categoriesSet) {
+                categoriesRemovedDuplicate.push(category)
+            }
+            return (
+                <form>
+                    <SearchBar
+                        callbackFilterText={this.handleCallbackFilterText}
+                        callbackIsStockOnly={this.handleCallbackIsStockOnly}
+                    />
+                    <ProductTable
+                        filteredProducts={filteredProducts}
+                        categoriesRemovedDuplicate={categoriesRemovedDuplicate}
+                    />
+                </form>
+            )
+        }
+    }
+    ReactDOM.render(
+        <div>
+            <FilterableProductTable products={viewState.products} />
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

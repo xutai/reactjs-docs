@@ -1,0 +1,282 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Rules of Hooks
+            </h1>
+        </section>
+
+        <section>
+            <ul>
+                <ul>
+                    <li>only-call-hooks-at-the-top-level</li>
+                    <li>only-call-hooks-from-react-functions</li>
+                </ul>
+                <li>eslint-plugin</li>
+                <li>explanation</li>
+                <li>next-steps</li>
+            </ul>
+        </section>
+        <section>
+            <h2 id=""></h2>
+            <section>
+                <h3 id="only-call-hooks-at-the-top-level">only-call-hooks-at-the-top-level</h3>
+                <p><strong>Don’t call Hooks inside loops, conditions, or nested functions.</strong>
+                    you ensure that Hooks are called in the same order each time a component renders.
+                    allows React to correctly preserve the state of Hooks between multiple useState and useEffect calls.
+                </p>
+            </section>
+            <section>
+                <h3 id="only-call-hooks-from-react-functions">only-call-hooks-from-react-functions</h3>
+                <p>
+                    <strong>Don’t call Hooks from regular JavaScript functions. </strong>
+                </p>
+                <p> you ensure that all stateful logic in a component is clearly visible from its source code.</p>
+            </section>
+        </section>
+        <section>
+            <h2 id="eslint-plugin">eslint-plugin</h2>
+            <p class="question">how to configure?</p>
+        </section>
+        <section>
+            <h2 id="explanation">explanation</h2>
+            <p>
+                <strong>React relies on the order in which Hooks are called</strong>
+            </p>
+        </section>
+        <section>
+            <h2 id="next-steps">next-steps</h2>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#only-call-hooks-at-the-top-level',
+                            href: '#only-call-hooks-at-the-top-level',
+                        },
+                        {
+                            key: 2,
+                            text: '#only-call-hooks-from-react-functions',
+                            href: '#only-call-hooks-from-react-functions',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#eslint-plugin',
+                    href: '#eslint-plugin',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 3,
+                    text: '#explanation',
+                    href: '#explanation',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 4,
+                    text: '#next-steps',
+                    href: '#next-steps',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+
+    function Form() {
+        // 1. Use the name state variable
+        const [name, setName] = useState('Mary');
+
+        // 2. Use an effect for persisting the form
+        useEffect(function persistForm() {
+            localStorage.setItem('formData', name);
+        });
+
+        // 3. Use the surname state variable
+        const [surname, setSurname] = useState('Poppins');
+
+        // 4. Use an effect for updating the title
+        useEffect(function updateTitle() {
+            document.title = name + ' ' + surname;
+        });
+
+        // ...
+
+        // 🔴 We're breaking the first rule by using a Hook in a condition
+        if (name !== '') {
+            useEffect(function persistForm() {
+                localStorage.setItem('formData', name);
+            });
+        }
+
+        useEffect(function persistForm() {
+            // 👍 We're not breaking the first rule anymore
+            if (name !== '') {
+                localStorage.setItem('formData', name);
+            }
+        });
+    }
+
+    // ------------
+    // First render
+    // ------------
+    useState('Mary')           // 1. Initialize the name state variable with 'Mary'
+    useEffect(persistForm)     // 2. Add an effect for persisting the form
+    useState('Poppins')        // 3. Initialize the surname state variable with 'Poppins'
+    useEffect(updateTitle)     // 4. Add an effect for updating the title
+
+    // -------------
+    // Second render
+    // -------------
+    useState('Mary')           // 1. Read the name state variable (argument is ignored)
+    useEffect(persistForm)     // 2. Replace the effect for persisting the form
+    useState('Poppins')        // 3. Read the surname state variable (argument is ignored)
+    useEffect(updateTitle)     // 4. Replace the effect for updating the title
+
+    // ...
+    useState('Mary')           // 1. Read the name state variable (argument is ignored)
+    // useEffect(persistForm)  // 🔴 This Hook was skipped!
+    useState('Poppins')        // 🔴 2 (but was 3). Fail to read the surname state variable
+    useEffect(updateTitle)     // 🔴 3 (but was 4). Fail to replace the effect
+
+
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

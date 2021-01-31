@@ -1,0 +1,249 @@
+em {
+    /* background-color: #ccddee; */
+    padding:0.2em;
+}
+
+code{
+    padding:0.2em;
+}
+pre {
+    padding: 0.5em 0.5em;
+}
+/* ||pre ||code */
+pre,  code{
+    /* color palette v1 dark */
+    background-color: #1b2426;
+    color: #ddd;
+
+    /* color palette v2 light */
+    /* background-color: #f6f6f6; */
+    /* color: #333; */
+
+    overflow: auto;
+    /* color: #96bdb6; */
+    /* min-width: 40em; */
+    /* max-width: 40em; */
+    max-width: 100%;
+    font-size: 1.4rem;
+}
+
+var {
+
+}
+
+dt {
+    /* background-color: unset; */
+    /* initial:  
+    restore all CSS properties to their initial state. 
+    On inherited properties, the initial value may be unexpected. 
+
+    unset
+    resets a property to its inherited value 
+    if the property naturally inherits from its parent, 
+    and to its initial value if not
+
+    revert
+    ...
+    */
+
+}
+
+
+
+/* remark */
+.question {
+    border-left: 5px solid yellow;
+    padding: 15px 25px;
+    background-color: lightgoldenrodyellow;
+}
+.question::before {
+    content: "Question: ";
+    /* color: green; */
+    /* border-color: black; */
+    /* border-style: dotted; */
+}
+.important {
+    border-left: 5px solid red;
+    padding: 15px 25px;
+    background-color: pink;
+}
+.important::before {
+    content: "Important: ";
+    /* color: green; */
+    /* border-color: black; */
+    /* border-style: dotted; */
+}
+.warning {
+    border-left: 5px solid darksalmon;
+    /* padding-left: 10px; */
+    padding: 15px 25px;
+    background-color: blanchedalmond;
+}
+.warning::before {
+    content: "Warning: ";
+    /* color: green; */
+    /* border-color: black; */
+    /* border-style: dotted; */
+}
+.note {
+    border-left: 5px solid lightblue;
+    padding: 15px 25px;
+    background-color: lightcyan;
+}
+.note::before {
+    content: "Note: ";
+    /* color: green; */
+    /* border-color: black; */
+    /* border-style: dotted; */
+}
+.info {
+    border-left: 5px solid #42b983;
+    padding: 15px 25px;
+    background-color: #f8f8f8;
+}
+.info::before {
+    content: "info: ";
+    /* color: green; */
+    /* border-color: black; */
+    /* border-style: dotted; */
+}
+.tip {
+    border-left: 5px solid #50a2ff;
+    padding: 15px 25px;
+    background-color: #f8f8f8;
+    /* background-color: lightsteelblue; */
+}
+.tip::before {
+    content: "Tip: ";
+    /* color: green; */
+    /* border-color: black; */
+    /* border-style: dotted; */
+}
+
+.key {
+    background-color: rgb(75, 178, 226);
+    padding: 4px 8px;
+}
+.keyword {
+    background-color: mediumaquamarine;
+    padding: 4px 8px;
+}
+.unfamiliar {
+    /* background-color: plum; */
+    background-color: palevioletred;
+    padding: 4px 8px;
+}
+/* .difficult {} */
+.confusing {
+    background-color: peachpuff;
+    padding: 4px 8px;
+}
+
+
+.reference {
+    border-left: 5px solid rgb(204, 21, 189);
+    padding: 15px 25px;
+    background-color: rgb(126, 80, 122);
+}
+
+.optional {
+    border-left: 4px solid #696969;
+    padding: 4px 8px;
+    margin: 0 0 0 10px;
+    background-color: #eeeeee;
+}
+
+/* grasped or not */
+.grasped::after {
+    content: "  grasped";
+    color:green;
+}
+
+
+
+
+.experimental::after {
+    content: url('/resources/images/mdn/experimental.svg');
+    display: inline-block;
+    margin: 0 0 0 1em;
+    vertical-align: middle;
+    /* padding: .2em .4em; */
+    /* background-color: deepskyblue; */
+    /* color: white; */
+    /* z-index: 1; */
+}
+
+
+.not-standardized {
+
+}
+
+.legacy {
+    text-decoration: line-through;
+}
+.legacy::after {
+    content: url('/resources/images/svg/trash-bin.svg');
+    display: inline-block;
+    margin: 0 0 0 1em;
+    vertical-align: middle;
+    width: 15px;
+    /* height: 15px; */
+}
+
+
+
+*::selection {
+    /* background-color: lightskyblue; */
+    /* background-color: lightsalmon; */
+    background-color: lightgreen;
+}
+pre::selection,
+code::selection {
+    color: black;
+}
+
+
+
+.mastery-level-1::after {
+    content: "*";
+    display: inline-block;
+    margin: 0 1em;
+}
+.mastery-level-2::after {
+    content: "**";
+    display: inline-block;
+    margin: 0 1em;
+}
+.mastery-level-3::after {
+    content: "***";
+    display: inline-block;
+    margin: 0 1em;
+}
+.mastery-level-4::after {
+    content: "****";
+    display: inline-block;
+    margin: 0 1em;
+}
+.mastery-level-5::after {
+    content: "*****";
+    display: inline-block;
+    margin: 0 1em;
+}
+
+
+.code-highlight {
+    background-color: #f3edd1;
+    color: #333;
+    display: block;
+    padding: 0 0 2rem 0
+}
+
+blockquote {
+    border-left: .3rem solid #dfe2e5;
+    margin: 0;
+    color: #999;
+    padding: 0 1rem;
+}
+
+
+

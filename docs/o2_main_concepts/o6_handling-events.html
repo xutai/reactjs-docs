@@ -1,0 +1,314 @@
+<section>
+    <h1>Handling Events</h1>
+    <p>Handling events with React elements is very similar to handling events on DOM elements. There are some syntax
+        differences:</p>
+    <ul>
+        <li>React events are named using camelCase, rather than lowercase.</li>
+        <li>With JSX you pass a function as the event handler, rather than a string.</li>
+    </ul>
+    <p>Another difference is that you cannot return false to prevent default behavior in React. You must call
+        preventDefault explicitly. For example, with plain HTML, to prevent the default link behavior of opening a new
+        page, you can write:</p>
+    <p>In React, this could instead be:</p>
+
+    <p>Here, e is a synthetic adj. 综合的；合成的，人造的 event. React defines these synthetic events according to the W3C spec, so
+        you don’t need to worry about cross-browser compatibility. See the SyntheticEvent reference guide to learn more.
+    </p>
+    <p>When using React, you generally don’t need to call addEventListener to add listeners to a DOM element after it is
+        created. Instead, just provide a listener when the element is initially rendered.</p>
+    <p>When you define a component using an ES6 class, a common pattern is for an event handler to be a method on the
+        class. For example, this Toggle component renders a button that lets the user toggle between “ON” and “OFF”
+        states:</p>
+    <p>You have to be careful about the meaning of this in JSX callbacks. In JavaScript, class methods are not bound by
+        default. If you forget to bind this.handleClick and pass it to onClick, this will be undefined when the function
+        is actually called.</p>
+    <p class="question">
+        is it for JSX callback only???
+        <br>
+        In JavaScript, class methods are not bound by default.?????
+        <br>
+        If you forget to bind this.handleClick and pass it to onClick, this will be undefined when the function is
+        actually called.??????
+    </p>
+    <p>This is not React-specific behavior; it is a part of how functions work in JavaScript. Generally, if you refer to
+        a method without () after it, such as onClick={this.handleClick}, you should bind that method.</p>
+    <p class="note">
+        onClick={this.handleClick} --- onclick="(this.handleClick)()"
+        <br><br>
+        this.handleClick() --- this -> the obj instance
+        <br>
+        this.handleClick --- this -> undefined
+        <br><br>
+        this.handleClick() --- obj.handleClick()
+        <br>
+        this.handClick -> function(){} -> {function(){}} -> (function())()
+    </p>
+    <p>If calling bind annoys you, there are two ways you can get around this. If you are using the experimental public
+        class fields syntax, you can use class fields to correctly bind callbacks:</p>
+    <p class="note">double check</p>
+    <p>This syntax is enabled by default in Create React App.</p>
+    <p>If you aren’t using class fields syntax, you can use an arrow function in the callback:</p>
+    <p>The problem with this syntax is that a different callback is created each time the LoggingButton renders. In most
+        cases, this is fine. However, if this callback is passed as a prop to lower components, those components might
+        do an extra re-rendering. We generally recommend binding in the constructor or using the class fields syntax, to
+        avoid this sort of performance problem.</p>
+    <p class="question">if this callback is passed as a prop to lower components, those components might do an extra
+        re-rendering?????????
+        does this mean each time a new button component instance created, the all lower components require this callback
+        function as prop will render???
+    </p>
+</section>
+<section>
+    <h2>Passing Arguments to Event Handlers</h2>
+    <p>Inside a loop, it is common to want to pass an extra parameter to an event handler. For example, if id is the row
+        ID, either of the following would work:</p>
+    <p>The above two lines are equivalent, and use arrow functions and Function.prototype.bind respectively.</p>
+    <p>In both cases, the e argument representing the React event will be passed as a second argument after the ID. With
+        an arrow function, we have to pass it explicitly, but with bind any further arguments are automatically
+        forwarded.</p>
+    <p class="question">
+        why bind?? not apply or call???
+    </p>
+</section>
+<section>
+    <p class="question">
+        JSX, why PascalCase for component name? or captital letter ?: React treats components starting with
+        lowercase letters as DOM tags.
+        <br>
+        JSX, why camelCase for React DOM property naming convention instead of HTML attribute names?
+    </p>
+</section>
+<section>
+    <div id="plain-html">
+        <!-- plain HTML -->
+        <!-- handling events on DOM elements -->
+        <button onclick="hiVanilla()">
+            say hi! vanilla
+        </button>
+        <a href="#" onclick="console.log('The link was clicked.'); return false">
+            Click me
+        </a>
+        <button onclick="toggleOn()">Day</button>
+        <button onclick="deleteRow(123, event)">Delete Record Row</button>
+    </div>
+    <div id="react-root">
+        <!-- handling events with React elements  -->
+    </div>
+    <div id="vue-root">
+        <button @click="hiVue">say hi! Vue!</button>
+        <component-anchor></component-anchor>
+        <component-toggle></component-toggle>
+        <delete-row>Delete Record Row</delete-row>
+    </div>
+    <script>
+        // vanilla
+        const hiVanilla = () => {
+            console.info('hi Valinna! the color of warning!')
+        }
+        const toggleOn = () => {
+            const el = document.querySelector('button[onclick="toggleOn()"]')
+            el.textContent = el.textContent === 'Day' ? 'Night' : 'Day'
+        }
+        const state = { id: null }
+        const deleteRow = (id, e) => {
+            console.info("e", e)
+            console.info("id", id)
+            state.id = id
+        }
+    </script>
+    <script type="text/babel">
+        // JSX - React
+        const hiReact = () => { console.info('hi React! Today\'s sky is React\'s color!') }
+        const callback = () => {
+            console.log(new Date().toLocaleTimeString())
+        }
+        // const el = <button onClick={hiReact}>
+        //     say hi! React!
+        // </button>
+        function ReactButton(props) {
+            return <button onClick={props.hiReact}>
+                say hi! React!
+                </button>
+        }
+        function ReactAnchor(props) {
+            const handleClick = (e) => {
+                // return false   why not working?
+                e.preventDefault()
+                console.log('The link was clicked.');
+            }
+            return <a href="#" onClick={handleClick}>
+                Click me</a>
+        }
+        class Toggle extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = { isToggleOn: true }
+                // This binding is necessary to make `this` work in the callback
+                // the value of this within methods depends on how they are called
+                this.handleClick = this.handleClick.bind(this)
+            }
+            // handleClick() {
+            //     this.setState(state => ({
+            //         isToggleOn: !state.isToggleOn
+            //     }))
+            // }
+            // This syntax ensures `this` is bound within handleClick.
+            // Warning: this is *experimental* syntax.
+            // public class fields syntax
+            handleClick = () => {
+                console.log('this is:', this);
+            }
+            render() {
+                return (
+                    // bad practice
+                    // TypeError: can't access property "handleClick", this is undefined
+                    // <button onClick={ function () { this.handleClick() }}>
+                    // good practice
+                    // <button onClick={this.handleClick}>
+                    // This syntax ensures `this` is bound within handleClick
+                    <button onClick={() => this.handleClick()}>
+                        {this.state.isToggleOn ? 'Day' : 'Night'}
+                    </button>
+                )
+            }
+        }
+        class ReactButtonDelete extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = { id: 123 }
+                // v3 
+                this.deleteRow = this.deleteRow.bind(this)
+
+            }
+            deleteRow(id, e) {
+                console.info("this", this)
+                console.info("expect event", e)
+                this.setState({
+                    id: null
+                })
+            }
+            render() {
+                return (
+                    // v1
+                    // <button onClick={(e) => this.deleteRow(456, e)}>Delete Record Row</button>
+                    // v2
+                    // <button onClick={this.deleteRow.bind(this, 456)}>Delete Record Row</button>
+                    // v3
+                    <button onClick={this.deleteRow.bind(null, 456)}>Delete Record Row</button>
+                    // v4 bad practcie  why call not working?
+                    // Uncaught Error: Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.
+                    // <button onClick={this.deleteRow.call(this, 456)}>Delete Record Row</button>
+                )
+            }
+        }
+        const component =
+            <div>
+                <ReactButton hiReact={hiReact} />
+                <ReactAnchor />
+                <Toggle />
+                <ReactButtonDelete />
+            </div>
+        const root = document.getElementById('react-root')
+        ReactDOM.render(
+            // el,
+            component,
+            root,
+            callback
+        )
+    </script>
+    <script>
+        // vue
+        const viewState = {}
+        const options = {
+            data() {
+                return {
+                    ...viewState
+                }
+            },
+            methods: {
+                hiVue() {
+                    console.info('hi Vue! Today\'s feeling is Vue\'s color!')
+                }
+            }
+        }
+        const app = Vue.createApp(options)
+        app.component('component-anchor', {
+            template: `
+                <a href="#" @click="handleClick">
+                Click me
+                </a>
+            `,
+            methods: {
+                handleClick(e) {
+                    e.preventDefault()
+                    console.log('The link was clicked.');
+                }
+            }
+        })
+        app.component('component-toggle', {
+            data() {
+                return {
+                    state: true
+                }
+            },
+            computed: {
+                dayOrNight() {
+                    return this.state ? 'Day' : 'Night'
+                }
+            },
+            template: `
+                <button @click="handleClick">
+                    {{ dayOrNight }}
+                </button>
+            `,
+            methods: {
+                handleClick() {
+                    this.state = !this.state
+                }
+            }
+        })
+        app.component('delete-row', {
+            data() {
+                return {
+                    id: NaN
+                }
+            },
+            methods: {
+                deleteRow: (id, e) => {
+                    console.info(id)
+                    console.info(e)
+                    this.id = id
+                }
+            },
+            template: `
+                <button @click="deleteRow(123, $event)">
+                    <slot></slot>
+                </button>          
+            `
+        })
+        const viewModel = app.mount('#vue-root')
+    </script>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

@@ -1,0 +1,29 @@
+
+footer  {
+    background-color: #fafbfc;
+    
+  }footer {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-direction: column;
+    flex-basis: initial;
+    flex-wrap: initial;
+    align-items: center;
+}
+
+
+
+.footer-ul {
+  display: flex;
+  flex-flow: row nowrap;
+   
+  /* main axis */
+  justify-content: center;
+  /* justify-items: auto; */
+
+  /* cross axis */
+  align-items: center;
+  align-content: center;
+  
+}

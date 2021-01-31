@@ -1,0 +1,389 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                DOM Elements
+            </h1>
+        </section>
+
+        <section>
+            <p>React implements a browser-independent DOM system for performance and cross-browser compatibility. We
+                took the opportunity to clean up a few rough edges in browser DOM implementations.</p>
+            <p>In React, all DOM properties and attributes (including event handlers) should be camelCased. For example,
+                the HTML attribute tabindex corresponds to the attribute tabIndex in React. The exception is aria-* and
+                data-* attributes, which should be lowercased. For example, you can keep aria-label as aria-label.</p>
+        </section>
+        <section>
+            <ul>
+                <li>differences-in-attributes</li>
+                <ul>
+                    <li>checked</li>
+                    <li>className</li>
+                    <li>dangeriouslySetInnerHTML</li>
+                    <li>htmlFor</li>
+                    <li>onChange</li>
+                    <li>selected</li>
+                    <li>style</li>
+                    <li>suppressContentEditableWarning</li>
+                    <li>suppressHydrationWarning</li>
+                    <li>value</li>
+                </ul>
+                <li>all-supported-html-attributes</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 id="differences-in-attributes">differences-in-attributes</h2>
+            <p>There are a number of attributes that work differently between React and HTML:</p>
+            <section>
+                <h3 id="checked">checked</h3>
+                <p>The checked attribute is supported by &lt;input&gt; components of type checkbox or radio. You can use
+                    it to set whether the component is checked. This is useful for building controlled components.
+                    defaultChecked is the uncontrolled equivalent, which sets whether the component is checked when it
+                    is first mounted.</p>
+            </section>
+            <section>
+                <h3 id="className">className</h3>
+                <p>To specify a CSS class, use the className attribute. This applies to all regular DOM and SVG elements
+                    like &lt;div&gt;, &lt;a&gt;, and others.</p>
+                <p>If you use React with Web Components (which is uncommon), use the class attribute instead.</p>
+            </section>
+            <section>
+                <h3 id="dangeriouslySetInnerHTML">dangeriouslySetInnerHTML</h3>
+                <p>dangerouslySetInnerHTML is React’s replacement for using innerHTML in the browser DOM. In general,
+                    setting HTML from code is risky because it’s easy to inadvertently expose your users to a cross-site
+                    scripting (XSS) attack. So, you can set HTML directly from React, but you have to type out
+                    dangerouslySetInnerHTML and pass an object with a __html key, to remind yourself that it’s
+                    dangerous. For example:</p>
+                <pre><code>
+function createMarkup() {
+    return {__html: &apos;First &amp;middot; Second&apos;};
+}
+    
+function MyComponent() {
+    return &lt;div dangerouslySetInnerHTML={createMarkup()} /&gt;;
+}
+                </code></pre>
+            </section>
+            <section>
+                <h3 id="htmlFor">htmlFor</h3>
+                <p>Since for is a reserved word in JavaScript, React elements use htmlFor instead.</p>
+            </section>
+            <section>
+                <h3 id="onChange">onChange</h3>
+                <p>The onChange event behaves as you would expect it to: whenever a form field is changed, this event is
+                    fired. We intentionally do not use the existing browser behavior because onChange is a misnomer n.
+                    用词不当；误称；for its behavior and React relies on this event to handle user input in real time.</p>
+            </section>
+            <section>
+                <h3 id="selected">selected</h3>
+                <p>The selected attribute is supported by &lt;option&gt; components. You can use it to set whether the
+                    component is selected. This is useful for building controlled components.</p>
+            </section>
+            <section>
+                <h3 id="style">style</h3>
+                <p class="warning">Some examples in the documentation use style for convenience, but using the style
+                    attribute as the primary means of styling elements is generally not recommended. In most cases,
+                    className should be used to reference classes defined in an external CSS stylesheet. style is most
+                    often used in React applications to add dynamically-computed styles at render time. See also FAQ:
+                    Styling and CSS.</p>
+                <p>The style attribute accepts a JavaScript object with camelCased properties rather than a CSS string.
+                    This is consistent with the DOM style JavaScript property, is more efficient, and prevents XSS
+                    security holes. For example:</p>
+                <pre><code>
+const divStyle = {
+    color: &apos;blue&apos;,
+    backgroundImage: &apos;url(&apos; + imgUrl + &apos;)&apos;,
+    };
+    
+function HelloWorldComponent() {
+    return &lt;div style={divStyle}&gt;Hello World!&lt;/div&gt;;
+}
+                </code></pre>
+                <p>Note that styles are not autoprefixed. To support older browsers, you need to supply corresponding style properties:</p>
+                <pre><code>
+const divStyle = {
+    WebkitTransition: &apos;all&apos;, // note the capital &apos;W&apos; here
+    msTransition: &apos;all&apos; // &apos;ms&apos; is the only lowercase vendor prefix
+    };
+    
+function ComponentWithTransition() {
+    return &lt;div style={divStyle}&gt;This should work cross-browser&lt;/div&gt;;
+}
+                </code></pre>
+                <p>Style keys are camelCased in order to be consistent with accessing the properties on DOM nodes from JS (e.g. node.style.backgroundImage). Vendor prefixes other than ms should begin with a capital letter. This is why WebkitTransition has an uppercase “W”.</p>
+                <p>React will automatically append a “px” suffix to certain numeric inline style properties. If you want to use units other than “px”, specify the value as a string with the desired unit. For example:</p>
+                <pre><code>
+// Result style: &apos;10px&apos;
+&lt;div style={{ height: 10 }}&gt;
+  Hello World!
+&lt;/div&gt;
+
+// Result style: &apos;10%&apos;
+&lt;div style={{ height: &apos;10%&apos; }}&gt;
+  Hello World!
+&lt;/div&gt;
+                </code></pre>
+                <p>Not all style properties are converted to pixel strings though. Certain ones remain unitless (eg zoom, order, flex). A complete list of unitless properties can be seen here.</p>
+            </section>
+            <section>
+                <h3 id="suppressContentEditableWarning">suppressContentEditableWarning</h3>
+                <p>Normally, there is a warning when an element with children is also marked as contentEditable, because it won’t work. This attribute suppresses that warning. Don’t use this unless you are building a library like Draft.js that manages contentEditable manually.</p>
+            </section>
+            <section>
+                <h3 id="suppressHydrationWarning">suppressHydrationWarning</h3>
+                <p>If you use server-side React rendering, normally there is a warning when the server and the client render different content. However, in some rare cases, it is very hard or impossible to guarantee an exact match. For example, timestamps are expected to differ on the server and on the client.</p>
+                <p>If you set suppressHydrationWarning to true, React will not warn you about mismatches in the attributes and the content of that element. It only works one level deep, and is intended to be used as an escape hatch. Don’t overuse it. You can read more about hydration in the ReactDOM.hydrate() documentation.</p>
+            </section>
+            <section>
+                <h3 id="value">value</h3>
+                <p>The value attribute is supported by &lt;input&gt; and &lt;textarea&gt; components. You can use it to set the value of the component. This is useful for building controlled components. defaultValue is the uncontrolled equivalent, which sets the value of the component when it is first mounted.</p>
+            </section>
+        </section>
+        <section>
+            <h2 id="all-supported-html-attributes">all-supported-html-attributes</h2>
+            <p>As of React 16, any standard or custom DOM attributes are fully supported.</p>
+            <p>React has always provided a JavaScript-centric API to the DOM. Since React components often take both custom and DOM-related props, React uses the camelCase convention just like the DOM APIs:</p>
+            <pre><code>
+&lt;div tabIndex=&quot;-1&quot; /&gt;      // Just like node.tabIndex DOM API
+&lt;div className=&quot;Button&quot; /&gt; // Just like node.className DOM API
+&lt;input readOnly={true} /&gt;  // Just like node.readOnly DOM API
+            </code></pre>
+            <p>These props work similarly to the corresponding HTML attributes, with the exception of the special cases documented above.</p>
+            <p>Some of the DOM attributes supported by React include:</p>
+            <pre><code>
+            accept acceptCharset accessKey action allowFullScreen alt async autoComplete
+autoFocus autoPlay capture cellPadding cellSpacing challenge charSet checked
+cite classID className colSpan cols content contentEditable contextMenu controls
+controlsList coords crossOrigin data dateTime default defer dir disabled
+download draggable encType form formAction formEncType formMethod formNoValidate
+formTarget frameBorder headers height hidden high href hrefLang htmlFor
+httpEquiv icon id inputMode integrity is keyParams keyType kind label lang list
+loop low manifest marginHeight marginWidth max maxLength media mediaGroup method
+min minLength multiple muted name noValidate nonce open optimum pattern
+placeholder poster preload profile radioGroup readOnly rel required reversed
+role rowSpan rows sandbox scope scoped scrolling seamless selected shape size
+sizes span spellCheck src srcDoc srcLang srcSet start step style summary
+tabIndex target title type useMap value width wmode wrap
+            </code></pre>
+            <p>Similarly, all SVG attributes are fully supported:</p>
+            <pre><code>
+                accentHeight accumulate additive alignmentBaseline allowReorder alphabetic
+amplitude arabicForm ascent attributeName attributeType autoReverse azimuth
+baseFrequency baseProfile baselineShift bbox begin bias by calcMode capHeight
+clip clipPath clipPathUnits clipRule colorInterpolation
+colorInterpolationFilters colorProfile colorRendering contentScriptType
+contentStyleType cursor cx cy d decelerate descent diffuseConstant direction
+display divisor dominantBaseline dur dx dy edgeMode elevation enableBackground
+end exponent externalResourcesRequired fill fillOpacity fillRule filter
+filterRes filterUnits floodColor floodOpacity focusable fontFamily fontSize
+fontSizeAdjust fontStretch fontStyle fontVariant fontWeight format from fx fy
+g1 g2 glyphName glyphOrientationHorizontal glyphOrientationVertical glyphRef
+gradientTransform gradientUnits hanging horizAdvX horizOriginX ideographic
+imageRendering in in2 intercept k k1 k2 k3 k4 kernelMatrix kernelUnitLength
+kerning keyPoints keySplines keyTimes lengthAdjust letterSpacing lightingColor
+limitingConeAngle local markerEnd markerHeight markerMid markerStart
+markerUnits markerWidth mask maskContentUnits maskUnits mathematical mode
+numOctaves offset opacity operator order orient orientation origin overflow
+overlinePosition overlineThickness paintOrder panose1 pathLength
+patternContentUnits patternTransform patternUnits pointerEvents points
+pointsAtX pointsAtY pointsAtZ preserveAlpha preserveAspectRatio primitiveUnits
+r radius refX refY renderingIntent repeatCount repeatDur requiredExtensions
+requiredFeatures restart result rotate rx ry scale seed shapeRendering slope
+spacing specularConstant specularExponent speed spreadMethod startOffset
+stdDeviation stemh stemv stitchTiles stopColor stopOpacity
+strikethroughPosition strikethroughThickness string stroke strokeDasharray
+strokeDashoffset strokeLinecap strokeLinejoin strokeMiterlimit strokeOpacity
+strokeWidth surfaceScale systemLanguage tableValues targetX targetY textAnchor
+textDecoration textLength textRendering to transform u1 u2 underlinePosition
+underlineThickness unicode unicodeBidi unicodeRange unitsPerEm vAlphabetic
+vHanging vIdeographic vMathematical values vectorEffect version vertAdvY
+vertOriginX vertOriginY viewBox viewTarget visibility widths wordSpacing
+writingMode x x1 x2 xChannelSelector xHeight xlinkActuate xlinkArcrole
+xlinkHref xlinkRole xlinkShow xlinkTitle xlinkType xmlns xmlnsXlink xmlBase
+xmlLang xmlSpace y y1 y2 yChannelSelector z zoomAndPan
+            </code></pre>
+            <p>You may also use custom attributes as long as they’re fully lowercase.</p>
+        </section>
+        
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#differences-in-attributes',
+                    href: '#differences-in-attributes',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#checked',
+                            href: '#checked',
+                        },
+                        {
+                            key: 2,
+                            text: '#className',
+                            href: '#className',
+                        },
+                        {
+                            key: 3,
+                            text: '#dangeriouslySetInnerHTML',
+                            href: '#dangeriouslySetInnerHTML',
+                        },
+                        {
+                            key: 4,
+                            text: '#htmlFor',
+                            href: '#htmlFor',
+                        },
+                        {
+                            key: 5,
+                            text: '#onChange',
+                            href: '#onChange',
+                        },
+                        {
+                            key: 6,
+                            text: '#selected',
+                            href: '#selected',
+                        },
+                        {
+                            key: 7,
+                            text: '#style',
+                            href: '#style',
+                        },
+                        {
+                            key: 8,
+                            text: '#suppressContentEditableWarning',
+                            href: '#suppressContentEditableWarning',
+                        },
+                        {
+                            key: 9,
+                            text: '#suppressHydrationWarning',
+                            href: '#suppressHydrationWarning',
+                        },
+                        {
+                            key: 10,
+                            text: '#value',
+                            href: '#value',
+                        },
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

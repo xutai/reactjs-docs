@@ -1,0 +1,205 @@
+@charset "utf-8";
+
+
+
+
+
+
+
+@media (orientation: landscape) {
+    /* landscape */
+}
+@media (orientation: portrait) {
+    /* portrait */
+}
+
+
+
+/* media queries */
+@media screen and (min-width: 800px) {}
+
+
+/* and logic in media queries */
+@media screen and (min-width: 400px) and (orientation: landscape) {
+    /* min-width and orientation */
+}
+/* or logic in media queries */
+@media screen and (min-width: 400px), screen and (orientation: landscape) {
+ /* min-width and orientation */
+}
+
+
+
+
+
+/* ||grid and fallback */
+@media screen and (min-width: 40em) {
+    /* mix-width: 40em, 640px  640/40=16 */
+    /* html 10px, body 1em */
+    article {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        column-gap: 20px;
+    }
+    div.content {
+        /* for browser support */
+        float: left;
+        width: 75%;
+    }
+    aside.extra {
+        /* for browser support */
+        float: left;
+        width: 25%;
+    }
+    /* feature queries */
+    @supports (display: grid) {
+        div.content {
+            width: auto;
+        }
+        aside.extra {
+            width: auto;
+        }
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+    }
+    nav > ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: space-around;
+        align-items: center;
+        justify-content: center;
+        justify-items: center;
+    }
+    nav > ul > li{
+        /* flex: 1; */
+        flex: 1 1 auto;
+        /* grow, shrink basis */
+        padding: 0 1em;
+    }
+
+
+    /* ||header */
+
+}
+
+
+/* doc */
+
+/* ||grid and fallback */
+@media screen and (min-width: 40em) {
+    /* mix-width: 40em, 640px  640/40=16 */
+    /* html 10px, body 1em */
+    div.wrapper {
+        /* height: 100vh; ??? */
+    }
+    article.doc {
+        display: grid;
+        grid-template-areas: 
+        "extra content"
+        "extra content";
+        grid-template-columns:  2fr 10fr;
+        column-gap: 20px;
+    }
+    aside.sidebar.doc {
+    }
+    /* maybe i should try clear floats!!! */
+    div.content.doc {
+        grid-area: content;
+        /* for browser support */
+        float: left;
+        /* width: 75%; */
+        /* width: calc(100% * 10 / 12); */
+        height: 100vh;
+        overflow-y: auto;
+    }
+    aside.extra.doc {
+        grid-area: extra;
+        /* for browser support */
+        float: left;
+        /* width: 25%; */
+        width: calc(10/0% * 2 / 12);
+        /* overflow-x: visible; */
+    }
+    /* feature queries */
+    @supports (display: grid) {
+        div.content {
+            width: auto;
+        }
+        aside.extra {
+            width: auto;
+        }
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+    }
+    nav > ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: space-around;
+        align-items: center;
+        justify-content: center;
+        justify-items: center;
+    }
+    nav > ul > li{
+        /* flex: 1; */
+        flex: 1 1 auto;
+        /* grow, shrink basis */
+        padding: 0 1em;
+    }
+
+
+
+
+    /* ||header */
+
+}
+
+
+/* ||grid */
+@media screen and (min-width: 70em) {
+    /* 70*16=1120 */
+    main .wrapper-grid {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        column-gap: 20px;
+        margin: 0 auto;
+    }
+
+    article {
+        margin-bottom: 0;
+    }
+
+    footer {
+        border-top: 1px solid #ccc;
+        margin-top: 2em;
+    }
+}
+
+
+
+
+
+
+/* ||hover */
+/* use of pointing devices */
+@media (hover: hover) {
+    /* hover: hover */
+}
+
+/* ||pointer */
+@media (pointer: none) {
+    /* does not support pointer? */
+}
+@media (pointer: fine) {
+    /* supports pointer? */
+}
+@media (pointer: coarse) {
+    /* coarse poiner? */
+}

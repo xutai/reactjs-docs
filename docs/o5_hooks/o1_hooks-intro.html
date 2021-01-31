@@ -1,0 +1,206 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Introducing Hooks
+            </h1>
+        </section>
+
+        <section>
+            <ul>
+                <li>video-introduction</li>
+                <li>no-breaking-changes</li>
+                <li class="mastery-level-3">motivation</li>
+                <ul>
+                    <li>its-hard-to-reuse-stateful-logic-between-components</li>
+                    <li>complex-components-become-hard-to-understand</li>
+                    <li>classes-confuse-both-people-and-machines</li>
+                </ul>
+                <li>gradual-adoption-strategy</li>
+                <li>frequently-asked-questions</li>
+                <li>next-steps</li>
+            </ul>
+        </section>
+        <section>
+            <p>Hooks are a new addition in React 16.8. They let you use state and other React features without writing a
+                class.</p>
+            <pre><code>
+import React, { useState } from &apos;react&apos;;
+
+function Example() {
+  // Declare a new state variable, which we&apos;ll call &quot;count&quot;  const [count, setCount] = useState(0);
+  return (
+    &lt;div&gt;
+      &lt;p&gt;You clicked {count} times&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        Click me
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+            </code></pre>
+            <p>This new function useState is the first “Hook” we’ll learn about, but this example is just a teaser.
+                Don’t worry if it doesn’t make sense yet!</p>
+            <p>You can start learning Hooks on the next page. On this page, we’ll continue by explaining why we’re
+                adding Hooks to React and how they can help you write great applications.</p>
+            <p class="warning">React 16.8.0 is the first release to support Hooks. When upgrading, don’t forget to
+                update all packages, including React DOM. React Native supports Hooks since the 0.59 release of React
+                Native.</p>
+        </section>
+        <section>
+            <h2 id="video-introduction">video-introduction</h2>
+        </section>
+        <section>
+            <h2 id="no-breaking-changes">no-breaking-changes</h2>
+        </section>
+        <section>
+            <h2 id="motivation">motivation</h2>
+            <section>
+                <h3 id="its-hard-to-reuse-stateful-logic-between-components">its-hard-to-reuse-stateful-logic-between-components</h3>
+            </section>
+            <section>
+                <h3 id="complex-components-become-hard-to-understand">complex-components-become-hard-to-understand</h3>
+            </section>
+            <section>
+                <h3 id="classes-confuse-both-people-and-machines">classes-confuse-both-people-and-machines</h3>
+            </section>
+        </section>
+        <section>
+            <h2 id="gradual-adoption-strategy">gradual-adoption-strategy</h2>
+        </section>
+        <section>
+            <h2 id="frequently-asked-questions">frequently-asked-questions</h2>
+        </section>
+        <section>
+            <h2 id="next-steps">next-steps</h2>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    function UseStateExample() {
+
+        // Declare a new state variable, which we'll call "count"
+        const [count, setCount] = window.React.useState(0);
+
+        return (
+            <div>
+                <p>You clicked {count} times</p>
+                <button onClick={() => setCount(count + 1)}>
+                    Click me
+                </button>
+            </div>
+        );
+    }
+    ReactDOM.render(
+        <div>
+            <UseStateExample/>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

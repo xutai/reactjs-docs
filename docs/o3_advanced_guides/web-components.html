@@ -1,0 +1,225 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Web Components
+            </h1>
+        </section>
+
+        <section>
+            <p>React and Web Components are built to solve different problems. Web Components provide strong encapsulation for reusable components, while React provides a declarative library that keeps the DOM in sync with your data. The two goals are complementary 互补的；. As a developer, you are free to use React in your Web Components, or to use Web Components in React, or both.</p>
+            <p>Most people who use React don’t use Web Components, but you may want to, especially if you are using third-party UI components that are written using Web Components.</p>
+        </section>
+        <section>
+            <ul>
+                <li>using-web-components-in-react</li>
+                <li>Using React in your Web Components </li>
+            </ul>
+        </section>
+        <section>
+            <h2 id="using-web-components-in-react">using-web-components-in-react</h2>
+            <pre><code>
+class HelloMessage extends React.Component {
+    render() {
+        return &lt;div&gt;Hello &lt;x-search&gt;{this.props.name}&lt;/x-search&gt;!&lt;/div&gt;;
+    }
+}
+            </code></pre>
+            <p class="warning">
+                <br>
+                Web Components often expose an imperative adj. 必要的，不可避免的；紧急的；命令的， API. For instance, a video Web Component might expose play() and pause() functions. To access the imperative APIs of a Web Component, you will need to use a ref to interact with the DOM node directly. If you are using third-party Web Components, the best solution is to write a React component that behaves as a wrapper for your Web Component.
+                <br><br>
+                Events emitted by a Web Component may not properly propagate through a React render tree. You will need to manually attach event handlers to handle these events within your React components.
+            </p>
+            <p>One common confusion is that Web Components use “class” instead of “className”.</p>
+            <pre><code>
+function BrickFlipbox() {
+    return (
+        &lt;brick-flipbox class=&quot;demo&quot;&gt;
+        &lt;div&gt;front&lt;/div&gt;
+        &lt;div&gt;back&lt;/div&gt;
+        &lt;/brick-flipbox&gt;
+    );
+}
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="using-react-in-your-web-components">using-react-in-your-web-components</h2>
+            <pre><code>
+class XSearch extends HTMLElement {
+    connectedCallback() {
+        const mountPoint = document.createElement(&apos;span&apos;);
+        this.attachShadow({ mode: &apos;open&apos; }).appendChild(mountPoint);
+    
+        const name = this.getAttribute(&apos;name&apos;);
+        const url = &apos;https://www.google.com/search?q=&apos; + encodeURIComponent(name);
+        ReactDOM.render(&lt;a href={url}&gt;{name}&lt;/a&gt;, mountPoint);
+    }
+}
+customElements.define(&apos;x-search&apos;, XSearch);
+            </code></pre>
+            <p class="warning">
+                This code will not work if you transform classes with Babel. See this issue for the discussion. Include the custom-elements-es5-adapter before you load your web components to fix this issue.
+            </p>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+                id: 1,
+                title: 'Learn React',
+                content: 'React is sky blue!'
+            },
+            {
+                id: 2,
+                title: 'Learn Vue',
+                content: 'Vue is mood Green!'
+            }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    ReactDOM.render(
+        <div>
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

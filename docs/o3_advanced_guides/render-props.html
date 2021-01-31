@@ -1,0 +1,680 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Render Props
+            </h1>
+        </section>
+
+        <section>
+            <ul>
+                <li>use-render-props-for-cross-cutting-concerns</li>
+                <li>using-props-other-than-render</li>
+                <li>caveats</li>
+                <ul>
+                    <li>be-careful-when-using-render-props-with-reactpurecomponent</li>
+                </ul>
+            </ul>
+        </section>
+        <section>
+            <p>The term “render prop” refers to a technique for sharing code between React components using a prop whose
+                value is a function.</p>
+            <p>A component with a render prop takes a function that returns a React element and calls it instead of
+                implementing its own render logic.</p>
+            <pre><code>
+&lt;DataProvider render={data =&gt; (
+    &lt;h1&gt;Hello {data.target}&lt;/h1&gt;
+)}/&gt;
+            </code></pre>
+            <p>Libraries that use render props include React Router, Downshift and Formik.</p>
+            <p>In this document, we’ll discuss why render props are useful, and how to write your own.</p>
+        </section>
+        <section>
+            <h2 id="use-render-props-for-cross-cutting-concerns">use-render-props-for-cross-cutting-concerns</h2>
+            <p>Components are the primary unit of code reuse in React, but it’s not always obvious how to share the
+                state or behavior that one component encapsulates to other components that need that same state.</p>
+            <p>For example, the following component tracks the mouse position in a web app:</p>
+            <pre><code>
+class MouseTracker extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.state = { x: 0, y: 0 };
+    }
+    
+    handleMouseMove(event) {
+        this.setState({
+        x: event.clientX,
+        y: event.clientY
+        });
+    }
+    
+    render() {
+        return (
+        &lt;div style={{ height: &apos;100vh&apos; }} onMouseMove={this.handleMouseMove}&gt;
+            &lt;h1&gt;Move the mouse around!&lt;/h1&gt;
+            &lt;p&gt;The current mouse position is ({this.state.x}, {this.state.y})&lt;/p&gt;
+        &lt;/div&gt;
+        );
+    }
+}
+            </code></pre>
+            <p>As the cursor moves around the screen, the component displays its (x, y) coordinates in a &lt;p&gt;.</p>
+            <p>Now the question is: How can we reuse this behavior in another component? In other words, if another
+                component needs to know about the cursor position, can we encapsulate that behavior so that we can
+                easily share it with that component?</p>
+            <p>Since components are the basic unit of code reuse in React, let&rsquo;s try refactoring the code a bit to
+                use a &lt;Mouse&gt; component that encapsulates the behavior we need to reuse elsewhere.</p>
+            <pre><code>
+// The &lt;Mouse&gt; component encapsulates the behavior we need...
+class Mouse extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.state = { x: 0, y: 0 };
+  }
+
+  handleMouseMove(event) {
+    this.setState({
+      x: event.clientX,
+      y: event.clientY
+    });
+  }
+
+  render() {
+    return (
+      &lt;div style={{ height: &apos;100vh&apos; }} onMouseMove={this.handleMouseMove}&gt;
+
+        {/* ...but how do we render something other than a &lt;p&gt;? */}
+        &lt;p&gt;The current mouse position is ({this.state.x}, {this.state.y})&lt;/p&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+
+class MouseTracker extends React.Component {
+  render() {
+    return (
+      &lt;&gt;
+        &lt;h1&gt;Move the mouse around!&lt;/h1&gt;
+        &lt;Mouse /&gt;
+      &lt;/&gt;
+    );
+  }
+}
+            </code></pre>
+            <p>Now the &lt;Mouse&gt; component encapsulates all behavior associated with listening for mousemove events
+                and storing the (x, y) position of the cursor, but it&rsquo;s not yet truly reusable.</p>
+            <p>For example, let&rsquo;s say we have a &lt;Cat&gt; component that renders the image of a cat chasing the
+                mouse around the screen. We might use a &lt;Cat mouse={{ x, y }}&gt; prop to tell the component the
+                coordinates of the mouse so it knows where to position the image on the screen.</p>
+            <p>As a first pass, you might try rendering the &lt;Cat&gt; inside &lt;Mouse&gt;&rsquo;s render method, like
+                this:</p>
+            <pre><code>
+class Cat extends React.Component {
+    render() {
+        const mouse = this.props.mouse;
+        return (
+        &lt;img src=&quot;/cat.jpg&quot; style={{ position: &apos;absolute&apos;, left: mouse.x, top: mouse.y }} /&gt;
+        );
+    }
+    }
+    
+    class MouseWithCat extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.state = { x: 0, y: 0 };
+    }
+    
+    handleMouseMove(event) {
+        this.setState({
+        x: event.clientX,
+        y: event.clientY
+        });
+    }
+    
+    render() {
+        return (
+        &lt;div style={{ height: &apos;100vh&apos; }} onMouseMove={this.handleMouseMove}&gt;
+    
+            {/*
+            We could just swap out the &lt;p&gt; for a &lt;Cat&gt; here ... but then
+            we would need to create a separate &lt;MouseWithSomethingElse&gt;
+            component every time we need to use it, so &lt;MouseWithCat&gt;
+            isn&apos;t really reusable yet.
+            */}
+            &lt;Cat mouse={this.state} /&gt;
+        &lt;/div&gt;
+        );
+    }
+    }
+    
+    class MouseTracker extends React.Component {
+    render() {
+        return (
+        &lt;div&gt;
+            &lt;h1&gt;Move the mouse around!&lt;/h1&gt;
+            &lt;MouseWithCat /&gt;
+        &lt;/div&gt;
+        );
+    }
+    }
+            </code></pre>
+            <p>This approach will work for our specific use case, but we haven&rsquo;t achieved the objective of truly
+                encapsulating the behavior in a reusable way. Now, every time we want the mouse position for a different
+                use case, we have to create a new component (i.e. essentially another &lt;MouseWithCat&gt;) that renders
+                something specifically for that use case.</p>
+            <p>Here&rsquo;s where the render prop comes in: Instead of hard-coding a &lt;Cat&gt; inside a &lt;Mouse&gt;
+                component, and effectively changing its rendered output, we can provide &lt;Mouse&gt; with a function
+                prop that it uses to dynamically determine what to render&ndash;a render prop.</p>
+            <pre><code>
+class Cat extends React.Component {
+    render() {
+        const mouse = this.props.mouse;
+        return (
+        &lt;img src=&quot;/cat.jpg&quot; style={{ position: &apos;absolute&apos;, left: mouse.x, top: mouse.y }} /&gt;
+        );
+    }
+    }
+    
+    class Mouse extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.state = { x: 0, y: 0 };
+    }
+    
+    handleMouseMove(event) {
+        this.setState({
+        x: event.clientX,
+        y: event.clientY
+        });
+    }
+    
+    render() {
+        return (
+        &lt;div style={{ height: &apos;100vh&apos; }} onMouseMove={this.handleMouseMove}&gt;
+    
+            {/*
+            Instead of providing a static representation of what &lt;Mouse&gt; renders,
+            use the &grave;render&grave; prop to dynamically determine what to render.
+            */}
+            {this.props.render(this.state)}
+        &lt;/div&gt;
+        );
+    }
+    }
+    
+    class MouseTracker extends React.Component {
+    render() {
+        return (
+        &lt;div&gt;
+            &lt;h1&gt;Move the mouse around!&lt;/h1&gt;
+            &lt;Mouse render={mouse =&gt; (
+            &lt;Cat mouse={mouse} /&gt;
+            )}/&gt;
+        &lt;/div&gt;
+        );
+    }
+    }
+            </code></pre>
+            <p>Now, instead of effectively cloning the &lt;Mouse&gt; component and hard-coding something else in its
+                render method to solve for a specific use case, we provide a render prop that &lt;Mouse&gt; can use to
+                dynamically determine what it renders.</p>
+            <p>More concretely, a render prop is a function prop that a component uses to know what to render.</p>
+            <p>This technique makes the behavior that we need to share extremely portable. To get that behavior, render
+                a &lt;Mouse&gt; with a render prop that tells it what to render with the current (x, y) of the cursor.
+            </p>
+            <p>One interesting thing to note about render props is that you can implement most higher-order components
+                (HOC) using a regular component with a render prop. For example, if you would prefer to have a withMouse
+                HOC instead of a <Mouse> component, you could easily create one using a regular <Mouse> with a render
+                        prop:</p>
+            <pre><code>
+// If you really want a HOC for some reason, you can easily
+// create one using a regular component with a render prop!
+function withMouse(Component) {
+  return class extends React.Component {
+    render() {
+      return (
+        &lt;Mouse render={mouse =&gt; (
+          &lt;Component {...this.props} mouse={mouse} /&gt;
+        )}/&gt;
+      );
+    }
+  }
+}
+            </code></pre>
+            <p>So using a render prop makes it possible to use either pattern.</p>
+        </section>
+        <section>
+            <h2 id="using-props-other-than-render">using-props-other-than-render</h2>
+            <p>It’s important to remember that just because the pattern is called “render props” you don’t have to use a prop named render to use this pattern. In fact, any prop that is a function that a component uses to know what to render is technically a “render prop”.</p>
+            <p>Although the examples above use render, we could just as easily use the children prop!</p>
+            <pre><code>
+&lt;Mouse children={mouse =&gt; (
+    &lt;p&gt;The mouse position is {mouse.x}, {mouse.y}&lt;/p&gt;
+)}/&gt;
+            </code></pre>
+            <p>And remember, the children prop doesn’t actually need to be named in the list of “attributes” in your JSX element. Instead, you can put it directly inside the element!</p>
+            <pre><code>
+&lt;Mouse&gt;
+  {mouse =&gt; (
+    &lt;p&gt;The mouse position is {mouse.x}, {mouse.y}&lt;/p&gt;
+  )}
+&lt;/Mouse&gt;
+            </code></pre>
+            <p>You’ll see this technique used in the react-motion API.</p>
+            <p>Since this technique is a little unusual, you’ll probably want to explicitly state that children should be a function in your propTypes when designing an API like this.</p>
+            <pre><code>
+Mouse.propTypes = {
+    children: PropTypes.func.isRequired
+};
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="caveats">caveats</h2>
+        </section>
+        <section>
+            <h3 id="be-careful-when-using-render-props-with-reactpurecomponent">
+                be-careful-when-using-render-props-with-reactpurecomponent</h3>
+                <p>Using a render prop can negate the advantage that comes from using React.PureComponent if you create the function inside a render method. This is because the shallow prop comparison will always return false for new props, and each render in this case will generate a new value for the render prop.</p>
+                <p>For example, continuing with our &lt;Mouse&gt; component from above, if Mouse were to extend React.PureComponent instead of React.Component, our example would look like this:</p>
+                <pre><code>
+class Mouse extends React.PureComponent {
+    // Same implementation as above...
+    }
+    
+    class MouseTracker extends React.Component {
+    render() {
+        return (
+        &lt;div&gt;
+            &lt;h1&gt;Move the mouse around!&lt;/h1&gt;
+    
+            {/*
+            This is bad! The value of the &grave;render&grave; prop will
+            be different on each render.
+            */}
+            &lt;Mouse render={mouse =&gt; (
+            &lt;Cat mouse={mouse} /&gt;
+            )}/&gt;
+        &lt;/div&gt;
+        );
+    }
+}
+                </code></pre>
+                <p>In this example, each time &lt;MouseTracker&gt; renders, it generates a new function as the value of the &lt;Mouse render&gt; prop, thus negating the effect of &lt;Mouse&gt; extending React.PureComponent in the first place!</p>
+                <p>To get around this problem, you can sometimes define the prop as an instance method, like so:</p>
+                <pre><code>
+class MouseTracker extends React.Component {
+    // Defined as an instance method, &grave;this.renderTheCat&grave; always
+    // refers to *same* function when we use it in render
+    renderTheCat(mouse) {
+        return &lt;Cat mouse={mouse} /&gt;;
+    }
+    
+    render() {
+        return (
+        &lt;div&gt;
+            &lt;h1&gt;Move the mouse around!&lt;/h1&gt;
+            &lt;Mouse render={this.renderTheCat} /&gt;
+        &lt;/div&gt;
+        );
+    }
+}
+                </code></pre>
+                <p>In cases where you cannot define the prop statically (e.g. because you need to close over the component&rsquo;s props and/or state) &lt;Mouse&gt; should extend React.Component instead.</p>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#',
+                    href: '#',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+    // render props - Use Render Props for Cross-Cutting Concerns
+    // v1
+    // class MouseTracker extends React.Component {
+    //     constructor(props) {
+    //         super(props);
+    //         this.handleMouseMove = this.handleMouseMove.bind(this);
+    //         this.state = { x: 0, y: 0 };
+    //     }
+
+    //     handleMouseMove(event) {
+    //         this.setState({
+    //             x: event.clientX,
+    //             y: event.clientY
+    //         });
+    //     }
+
+    //     render() {
+    //         return (
+    //             <div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}>
+    //                 <h1>Move the mouse around!</h1>
+    //                 <p>The current mouse position is ({this.state.x}, {this.state.y})</p>
+    //             </div>
+    //         );
+    //     }
+    // }
+
+
+    // render props - Use Render Props for Cross-Cutting Concerns
+    // v2
+    // The <Mouse> component encapsulates the behavior we need...
+    // class Mouse extends React.Component {
+    //     constructor(props) {
+    //         super(props);
+    //         this.handleMouseMove = this.handleMouseMove.bind(this);
+    //         this.state = { x: 0, y: 0 };
+    //     }
+
+    //     handleMouseMove(event) {
+    //         this.setState({
+    //             x: event.clientX,
+    //             y: event.clientY
+    //         });
+    //     }
+
+    //     render() {
+    //         return (
+    //             <div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}>
+
+    //                 {/* ...but how do we render something other than a <p>? */}
+    //                 <p>The current mouse position is ({this.state.x}, {this.state.y})</p>
+    //             </div>
+    //         );
+    //     }
+    // }
+
+    // class MouseTracker extends React.Component {
+    //     render() {
+    //         return (
+    //             <div>
+    //                 <h1>Move the mouse around!</h1>
+    //                 <Mouse />
+    //             </div>
+    //         );
+    //     }
+    // }
+
+
+    // render props - Use Render Props for Cross-Cutting Concerns
+    // v3
+    // class Cat extends React.Component {
+    //     render() {
+    //         const mouse = this.props.mouse;
+    //         return (
+    //             <img src="/resources/images/noimage.jpg" style={{ position: 'absolute', left: mouse.x, top: mouse.y }} />
+    //         );
+    //     }
+    // }
+
+    // class MouseWithCat extends React.Component {
+    //     constructor(props) {
+    //         super(props);
+    //         this.handleMouseMove = this.handleMouseMove.bind(this);
+    //         this.state = { x: 0, y: 0 };
+    //     }
+
+    //     handleMouseMove(event) {
+    //         this.setState({
+    //             x: event.clientX,
+    //             y: event.clientY
+    //         });
+    //     }
+
+    //     render() {
+    //         return (
+    //             <div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}>
+
+    //                 {/*
+    //       We could just swap out the <p> for a <Cat> here ... but then
+    //       we would need to create a separate <MouseWithSomethingElse>
+    //       component every time we need to use it, so <MouseWithCat>
+    //       isn't really reusable yet.
+    //     */}
+    //                 <Cat mouse={this.state} />
+    //             </div>
+    //         );
+    //     }
+    // }
+
+    // class MouseTracker extends React.Component {
+    //     render() {
+    //         return (
+    //             <div>
+    //                 <h1>Move the mouse around!</h1>
+    //                 <MouseWithCat />
+    //             </div>
+    //         );
+    //     }
+    // }
+
+
+    // render props - Use Render Props for Cross-Cutting Concerns
+    // v4
+    class Cat extends React.Component {
+        render() {
+            const mouse = this.props.mouse;
+            return (
+                <img src="/resources/images/noimage.jpg" style={{ position: 'absolute', left: mouse.x, top: mouse.y }} />
+            );
+        }
+    }
+
+    class Mouse extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleMouseMove = this.handleMouseMove.bind(this);
+            this.state = { x: 0, y: 0 };
+        }
+
+        handleMouseMove(event) {
+            this.setState({
+                x: event.clientX,
+                y: event.clientY
+            });
+        }
+
+        render() {
+            return (
+                <div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}>
+
+                    {/*
+          Instead of providing a static representation of what <Mouse> renders,
+          use the `render` prop to dynamically determine what to render.
+        */}
+                    {this.props.render(this.state)}
+                </div>
+            );
+        }
+    }
+
+    class MouseTracker extends React.Component {
+        render() {
+            return (
+                <div>
+                    <h1>Move the mouse around!</h1>
+                    <Mouse render={mouse => (
+                        <Cat mouse={mouse} />
+                    )} />
+                </div>
+            );
+        }
+    }
+
+
+    // render props - Use Render Props for Cross-Cutting Concerns
+    // v5 
+    // higher-order components
+    // If you really want a HOC for some reason, you can easily
+    // create one using a regular component with a render prop!
+    function withMouse(Component) {
+        return class extends React.Component {
+            render() {
+                return (
+                    <Mouse render={mouse => (
+                        <Component {...this.props} mouse={mouse} />
+                    )} />
+                );
+            }
+        }
+    }
+    const ComponentWithMouse = withMouse(Cat)
+
+
+    ReactDOM.render(
+        <div>
+            <MouseTracker />
+            <ComponentWithMouse />
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

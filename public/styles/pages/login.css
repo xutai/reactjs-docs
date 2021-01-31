@@ -1,0 +1,71 @@
+
+
+.signup {
+        /* Center the form on the page */
+        margin: 0 auto;
+        /* width: 400px; */
+        width: 100%;
+        max-width: 400px;
+        /* Form outline */
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+ 
+}
+
+.join-form-title {
+    text-align: center;
+    padding: 10px 0;
+}
+legend {
+    display: none;
+}
+
+.wrapper-join {
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+
+.toggleDisplayBlock {
+    display: block;
+}
+.toggleDisplayNone {
+    display: none;
+}
+
+
+.join-success-ui-wrapper {
+    /* display: none; */
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.7);
+    /* opacity: .5; */
+    z-index: 1;
+}
+.join-success-ui-content {
+    position: fixed;
+    top:50%;
+    left:50%;
+    margin-left: -150px;
+    width:300px;
+    height: 100px;
+    margin-top: -50px;
+    max-width: 300px;
+    background-color: lightseagreen;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+
+} 
+.join-success-ui-content-text {
+    text-align: center;
+    align-self: center;
+    /* justify-self: center;  grid only */
+}

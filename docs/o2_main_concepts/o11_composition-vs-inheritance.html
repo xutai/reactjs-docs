@@ -1,0 +1,429 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Composition vs Inheritance
+            </h1>
+        </section>
+
+        <section>
+            <p>React has a powerful composition model, and we recommend using composition instead of inheritance to
+                reuse code between components.</p>
+            <p>In this section, we will consider a few problems where developers new to React often reach for
+                inheritance, and show how we can solve them with composition.</p>
+            <p class="note">
+                <br>
+                inheritance: class A extends class B, or new constructorFunction()
+                <br>
+                <br>
+                composition: pass JSX element from specialized component to common component as props.children, then
+                evaluate the expression {props.children}
+            </p>
+        </section>
+        <section>
+            <h2 id="containment">containment n. 控制，抑制;</h2>
+            <p>Some components don’t know their children ahead of time. This is especially common for components like
+                Sidebar or Dialog that represent generic “boxes”.</p>
+            <p>We recommend that such components use the special children prop to pass children elements directly into
+                their output:</p>
+            <pre><code>
+function FancyBorder(props) {
+    return (
+        &lt;div className={&apos;FancyBorder FancyBorder-&apos; + props.color}&gt;
+        {props.children}
+        &lt;/div&gt;
+    );
+    }
+            </code></pre>
+            <p>This lets other components pass arbitrary children to them by nesting the JSX:</p>
+            <pre><code>
+function WelcomeDialog() {
+    return (
+        &lt;FancyBorder color=&quot;blue&quot;&gt;
+        &lt;h1 className=&quot;Dialog-title&quot;&gt;
+            Welcome
+        &lt;/h1&gt;
+        &lt;p className=&quot;Dialog-message&quot;&gt;
+            Thank you for visiting our spacecraft!
+        &lt;/p&gt;
+        &lt;/FancyBorder&gt;
+    );
+}
+            </code></pre>
+            <p>Anything inside the &lt;FancyBorder&gt; JSX tag gets passed into the FancyBorder component as a children
+                prop. Since FancyBorder renders {props.children} inside a &lt;div&gt;, the passed elements appear in the
+                final output.</p>
+            <p>While this is less common, sometimes you might need multiple “holes” in a component. In such cases you
+                may come up with your own convention instead of using children:</p>
+            <pre><code>
+function SplitPane(props) {
+    return (
+        &lt;div className=&quot;SplitPane&quot;&gt;
+        &lt;div className=&quot;SplitPane-left&quot;&gt;
+            {props.left}
+        &lt;/div&gt;
+        &lt;div className=&quot;SplitPane-right&quot;&gt;
+            {props.right}
+        &lt;/div&gt;
+        &lt;/div&gt;
+    );
+    }
+    
+    function App() {
+    return (
+        &lt;SplitPane
+        left={
+            &lt;Contacts /&gt;
+        }
+        right={
+            &lt;Chat /&gt;
+        } /&gt;
+    );
+}
+            </code></pre>
+            <p>React elements like &lt;Contacts /&gt; and &lt;Chat /&gt; are just objects, so you can pass them as props
+                like any other data. This approach may remind you of &ldquo;slots&rdquo; in other libraries but there
+                are no limitations on what you can pass as props in React.</p>
+        </section>
+        <section>
+            <h2 id="specialization">specialization n. 专门化；特殊化；特化作用</h2>
+            <p>Sometimes we think about components as being “special cases” of other components. For example, we might
+                say that a WelcomeDialog is a special case of Dialog.</p>
+            <p>In React, this is also achieved by composition, where a more “specific” component renders a more
+                “generic” one and configures it with props:</p>
+            <pre><code>
+function Dialog(props) {
+    return (
+        &lt;FancyBorder color=&quot;blue&quot;&gt;
+        &lt;h1 className=&quot;Dialog-title&quot;&gt;
+            {props.title}
+        &lt;/h1&gt;
+        &lt;p className=&quot;Dialog-message&quot;&gt;
+            {props.message}
+        &lt;/p&gt;
+        &lt;/FancyBorder&gt;
+    );
+    }
+    
+    function WelcomeDialog() {
+    return (
+        &lt;Dialog
+        title=&quot;Welcome&quot;
+        message=&quot;Thank you for visiting our spacecraft!&quot; /&gt;
+    );
+}
+            </code></pre>
+            <p>Composition works equally well for components defined as classes:</p>
+            <pre><code>
+function Dialog(props) {
+    return (
+        &lt;FancyBorder color=&quot;blue&quot;&gt;
+        &lt;h1 className=&quot;Dialog-title&quot;&gt;
+            {props.title}
+        &lt;/h1&gt;
+        &lt;p className=&quot;Dialog-message&quot;&gt;
+            {props.message}
+        &lt;/p&gt;
+        {props.children}
+        &lt;/FancyBorder&gt;
+    );
+    }
+    
+    class SignUpDialog extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);
+        this.state = {login: &apos;&apos;};
+    }
+    
+    render() {
+        return (
+        &lt;Dialog title=&quot;Mars Exploration Program&quot;
+                message=&quot;How should we refer to you?&quot;&gt;
+            &lt;input value={this.state.login}
+                    onChange={this.handleChange} /&gt;
+            &lt;button onClick={this.handleSignUp}&gt;
+            Sign Me Up!
+            &lt;/button&gt;
+        &lt;/Dialog&gt;
+        );
+    }
+    
+    handleChange(e) {
+        this.setState({login: e.target.value});
+    }
+    
+    handleSignUp() {
+        alert(&grave;Welcome aboard, ${this.state.login}!&grave;);
+    }
+    }
+            </code></pre>
+        </section>
+        <section>
+            <h2 id="so-what-about-inheritance">so-what-about-inheritance</h2>
+            <p>At Facebook, we use React in thousands of components, and we haven’t found any use cases where we would
+                recommend creating component inheritance hierarchies hierarchies： n. 阶层，层级；分层，分类.</p>
+            <p>Props and composition give you all the flexibility you need to customize a component’s look and behavior
+                in an explicit and safe way. Remember that components may accept arbitrary props, including primitive
+                values, React elements, or functions.</p>
+            <p>If you want to reuse non-UI functionality between components, we suggest extracting it into a separate
+                JavaScript module. The components may import it and use that function, object, or a class, without
+                extending it.</p>
+        </section>
+        <section>
+            <h2 id=""></h2>
+        </section>
+        <section>
+            <h2 id=""></h2>
+        </section>
+        <section>
+            <h3 id=""></h3>
+        </section>
+        <section id="">
+            <h4></h4>
+        </section>
+        <section id="">
+            <h5></h5>
+        </section>
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#containment',
+                    href: '#containment'
+                },
+                {
+                    key: 2,
+                    text: '#specialization',
+                    href: '#specialization'
+                },
+                {
+                    key: 3,
+                    text: '#so-what-about-inheritance',
+                    href: '#so-what-about-inheritance'
+                },
+                {
+                    key: 4,
+                    text: '#',
+                    href: '#'
+                },
+            ]
+            const listItems = Items.map((item) =>
+                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [
+            { id: 1, title: 'Learn React', content: 'React is sky blue!' },
+            { id: 2, title: 'Learn Vue', content: 'Vue is mood Green!' }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {
+        }
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+    function FancyBorder(props) {
+        return (
+            <div className={'FancyBorder FancyBorder-' + props.color}>
+                {props.children}
+            </div>
+        );
+    }
+    function Dialog(props) {
+        return (
+            <FancyBorder color="blue">
+                <h1 className="Dialog-title">
+                    {props.title}
+                </h1>
+                <p className="Dialog-message">
+                    {props.message}
+                </p>
+                {props.children}
+            </FancyBorder>
+        );
+    }
+    function WelcomeDialog() {
+        return (
+            <FancyBorder color="blue">
+                <h1 className="Dialog-title">
+                    Welcome
+                </h1>
+                <p className="Dialog-message">
+                    Thank you for visiting our spacecraft!
+                </p>
+            </FancyBorder>
+        );
+    }
+    class SignUpDialog extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+            this.handleSignUp = this.handleSignUp.bind(this);
+            this.state = { login: '' };
+        }
+
+        render() {
+            return (
+                <Dialog title="Mars Exploration Program"
+                    message="How should we refer to you?">
+                    <input value={this.state.login}
+                        onChange={this.handleChange} />
+                    <button onClick={this.handleSignUp}>
+                        Sign Me Up!
+                    </button>
+                </Dialog>
+            );
+        }
+
+        handleChange(e) {
+            this.setState({ login: e.target.value });
+        }
+
+        handleSignUp() {
+            alert(`Welcome aboard, ${this.state.login}!`);
+        }
+    }
+    function WelcomeDialog() {
+        return (
+            <Dialog
+                title="Welcome"
+                message="Thank you for visiting our spacecraft!" />
+        );
+    }
+    function SplitPane(props) {
+        return (
+            <div className="SplitPane">
+                <div className="SplitPane-left">
+                    {props.left}
+                </div>
+                <div className="SplitPane-right">
+                    {props.right}
+                </div>
+            </div>
+        );
+    }
+    function Contacts() {
+        return (
+            <code>contracts</code>
+        )
+    }
+    function Chat() {
+        return (
+            <code>chat</code>
+        )
+    }
+    function App() {
+        return (
+            <SplitPane
+                left={
+                    <Contacts />
+                }
+                right={
+                    <Chat />
+                } />
+        );
+    }
+    ReactDOM.render(
+        <div>
+            <SignUpDialog />
+            <WelcomeDialog />
+            <App />
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>
+
+
+
+
+
+
+
+
+
+<section id="plain-html">
+
+</section>
+<section id="vue">
+
+</section>
+<section id="react">
+
+</section>
+<script>
+    // vanilla
+</script>
+<script>
+    // vue
+</script>
+<script type="text/babel">
+    // react
+</script>
+
+
+
+<section>
+    <h1></h1>
+</section>
+<section>
+    <h2></h2>
+</section>
+<section>
+    <h3></h3>
+</section>
+<section>
+    <h4></h4>
+</section>
+<section>
+    <h5></h5>
+</section>

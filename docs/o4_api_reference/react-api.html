@@ -1,0 +1,840 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                React Top-Level API
+            </h1>
+        </section>
+
+        <section>
+            <p>React is the entry point to the React library. If you load React from a &lt;script&gt; tag, these
+                top-level APIs are available on the React global. If you use ES6 with npm, you can write import React
+                from &apos;react&apos;. If you use ES5 with npm, you can write var React = require(&apos;react&apos;).
+            </p>
+        </section>
+        <section>
+            <ul>
+                <li>overview</li>
+                <ul>
+                    <li>components</li>
+                    <li>creating-react-elements</li>
+                    <li>transforming-elements</li>
+                    <li>fragments</li>
+                    <li>refs</li>
+                    <li>suspense</li>
+                    <li>hooks</li>
+                </ul>
+                <li>reference</li>
+                <ul>
+                    <li>React.Component</li>
+                    <li>React.PureComponent</li>
+                    <li>React.memo</li>
+                    <li>createElement()</li>
+                    <li>cloneElement()</li>
+                    <li class="legacy">createFactory()</li>
+                    <li>isValidElement()</li>
+                    <li>React.Children</li>
+                    <ul>
+                        <li>React.Children.map</li>
+                        <li>React.Children.forEach</li>
+                        <li>React.Children.count</li>
+                        <li>React.Children.only</li>
+                        <li>React.Children.toArray</li>
+                    </ul>
+                    <li>React.Fragment</li>
+                    <li>React.createRef</li>
+                    <li>React.forwardRef</li>
+                    <li>React.lazy</li>
+                    <li>React.Suspense</li>
+                </ul>
+            </ul>
+        </section>
+        <section>
+            <h2 id="overview">Overview</h2>
+            <section>
+                <h3 id="components">Components</h3>
+                <p>React components let you split the UI into independent, reusable pieces, and think about each piece
+                    in isolation. React components can be defined by subclassing React.Component or React.PureComponent.
+                </p>
+                <ul>
+                    <li>React.Component</li>
+                    <li>React.PureComponent</li>
+                </ul>
+                <p>If you don’t use ES6 classes, you may use the create-react-class module instead. See Using React
+                    without ES6 for more information.</p>
+                <p>React components can also be defined as functions which can be wrapped:</p>
+                <ul>
+                    <li>React.memo</li>
+                </ul>
+            </section>
+            <section>
+                <h3 id="creating-react-elements">Creating React Elements</h3>
+                <p>We recommend using JSX to describe what your UI should look like. Each JSX element is just syntactic
+                    sugar for calling React.createElement(). You will not typically invoke the following methods
+                    directly if you are using JSX.</p>
+                <ul>
+                    <li>createElement()</li>
+                    <li>createFactory()</li>
+                </ul>
+                <p>See Using React without JSX for more information.</p>
+            </section>
+            <section>
+                <h3 id="transforming-elements">Transforming Elements</h3>
+                <p>React provides several APIs for manipulating elements:</p>
+                <ul>
+                    <li>cloneElement()</li>
+                    <li>isValidElement()</li>
+                    <li>React.Children</li>
+                </ul>
+            </section>
+            <section>
+                <h3 id="fragments">Fragments</h3>
+                <p>React also provides a component for rendering multiple elements without a wrapper.</p>
+                <ul>
+                    <li>React.Fragment</li>
+                </ul>
+            </section>
+            <section>
+                <h3 id="refs">Refs</h3>
+                <ul>
+                    <li>React.createRef</li>
+                    <li>React.forwardRef</li>
+                </ul>
+            </section>
+            <section>
+                <h3 id="suspense">Suspense</h3>
+                <p>Suspense lets components “wait” for something before rendering. Today, Suspense only supports one use
+                    case: loading components dynamically with React.lazy. In the future, it will support other use cases
+                    like data fetching.</p>
+                <ul>
+                    <li>React.lazy</li>
+                    <li>React.Suspense</li>
+                </ul>
+            </section>
+            <section>
+                <h3 id="hooks">Hooks</h3>
+                <p>Hooks are a new addition in React 16.8. They let you use state and other React features without
+                    writing a class. Hooks have a dedicated docs section and a separate API reference:</p>
+                <ul>
+                    <li>Basic Hooks</li>
+                    <ul>
+                        <li>useState</li>
+                        <li>useEffect</li>
+                        <li>useContext</li>
+                    </ul>
+                    <li>Additional Hooks</li>
+                    <ul>
+                        <li>useReducer</li>
+                        <li>useCallback</li>
+                        <li>useMemo</li>
+                        <li>useRef</li>
+                        <li>useImperativeHandle</li>
+                        <li>useLayoutEffect</li>
+                        <li>useDebugValue</li>
+                    </ul>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <h2 id="reference">Reference</h2>
+            <section>
+                <h3 id="React.Component">React.Component</h3>
+                <p>React.Component is the base class for React components when they are defined using ES6 classes:</p>
+                <pre><code>
+class Greeting extends React.Component {
+    render() {
+        return &lt;h1&gt;Hello, {this.props.name}&lt;/h1&gt;;
+    }
+}
+                </code></pre>
+                <p>See the React.Component API Reference for a list of methods and properties related to the base
+                    React.Component class.</p>
+            </section>
+            <section>
+                <h3 id="React.PureComponent">React.PureComponent</h3>
+                <p class="note">does that mean React.PureComponent has shouldComponentUpdate() method, which decides if
+                    component should update depending on state or props??</p>
+                <p>React.PureComponent is similar to React.Component. The difference between them is that
+                    React.Component doesn’t implement shouldComponentUpdate(), but React.PureComponent implements it
+                    with a shallow prop and state comparison.</p>
+                <p>If your React component’s render() function renders the same result given the same props and state,
+                    you can use React.PureComponent for a performance boost in some cases.</p>
+                <p class="warning">
+                    <br>
+                    React.PureComponent’s shouldComponentUpdate() only shallowly compares the objects. If these contain
+                    complex data structures, it may produce false-negatives for deeper differences. Only extend
+                    PureComponent when you expect to have simple props and state, or use forceUpdate() when you know
+                    deep data structures have changed. Or, consider using immutable objects to facilitate fast
+                    comparisons of nested data.
+                    <br><br>
+                    Furthermore, React.PureComponent’s shouldComponentUpdate() skips prop updates for the whole
+                    component subtree. Make sure all the children components are also “pure”.
+                </p>
+            </section>
+            <section>
+                <h3 id="React.memo">React.memo</h3>
+                <pre><code>
+const MyComponent = React.memo(function MyComponent(props) {
+    /* render using props */
+});
+                </code></pre>
+                <p>React.memo is a higher order component. It’s similar to React.PureComponent but for function
+                    components instead of classes.</p>
+                <p>If your function component renders the same result given the same props, you can wrap it in a call to
+                    React.memo for a performance boost in some cases by memoizing the result. This means that React will
+                    skip rendering the component, and reuse the last rendered result.</p>
+                <p>React.memo only checks for prop changes. If your function component wrapped in React.memo has a
+                    useState or useContext Hook in its implementation, it will still rerender when state or context
+                    change.</p>
+                <p>By default it will only shallowly compare complex objects in the props object. If you want control
+                    over the comparison, you can also provide a custom comparison function as the second argument.</p>
+                <pre><code>
+function MyComponent(props) {
+    /* render using props */
+}
+function areEqual(prevProps, nextProps) {
+    /*
+    return true if passing nextProps to render would return
+    the same result as passing prevProps to render,
+    otherwise return false
+    */
+}
+export default React.memo(MyComponent, areEqual);
+                </code></pre>
+                <p>This method only exists as a performance optimization. Do not rely on it to “prevent” a render, as
+                    this can lead to bugs.</p>
+                <p class="warning">Unlike the shouldComponentUpdate() method on class components, the areEqual function
+                    returns true if the props are equal and false if the props are not equal. This is the inverse from
+                    shouldComponentUpdate.</p>
+            </section>
+            <section>
+                <h3 id="createElement()">createElement()</h3>
+                <pre><code>
+React.createElement(
+    type,
+    [props],
+    [...children]
+)
+                </code></pre>
+                <p>Create and return a new React element of the given type. The type argument can be either a tag name
+                    string (such as 'div' or 'span'), a React component type (a class or a function), or a React
+                    fragment type.</p>
+                <p>Code written with JSX will be converted to use React.createElement(). You will not typically invoke
+                    React.createElement() directly if you are using JSX. See React Without JSX to learn more.</p>
+            </section>
+            <section>
+                <h3 id="cloneElement()">cloneElement()</h3>
+                <pre><code>
+React.cloneElement(
+  element,
+  [props],
+  [...children]
+)
+                </code></pre>
+                <p>Clone and return a new React element using element as the starting point. The resulting element will
+                    have the original element’s props with the new props merged in shallowly. New children will replace
+                    existing children. key and ref from the original element will be preserved.</p>
+                <p>React.cloneElement() is almost equivalent to:</p>
+                <pre><code>
+&lt;element.type {...element.props} {...props}&gt;{children}&lt;/element.type&gt;
+                </code></pre>
+                <p>However, it also preserves refs. This means that if you get a child with a ref on it, you won’t
+                    accidentally steal it from your ancestor. You will get the same ref attached to your new element.
+                </p>
+                <p>This API was introduced as a replacement of the deprecated React.addons.cloneWithProps().</p>
+            </section>
+            <section>
+                <h3 id="createFactory()">createFactory()</h3>
+                <pre><code>
+React.createFactory(type)
+                </code></pre>
+                <p>Return a function that produces React elements of a given type. Like React.createElement(), the type
+                    argument can be either a tag name string (such as 'div' or 'span'), a React component type (a class
+                    or a function), or a React fragment type.</p>
+                <p>This helper is considered legacy, and we encourage you to either use JSX or use React.createElement()
+                    directly instead.</p>
+                <p>You will not typically invoke React.createFactory() directly if you are using JSX. See React Without
+                    JSX to learn more.</p>
+            </section>
+            <section>
+                <h3 id="isValidElement()">isValidElement()</h3>
+                <pre><code>
+React.isValidElement(object)
+                </code></pre>
+                <p>Verifies the object is a React element. Returns true or false.</p>
+            </section>
+            <section>
+                <h3 id="React.Children">React.Children</h3>
+                <p>React.Children provides utilities for dealing with the this.props.children opaque data structure.</p>
+                <section>
+                    <h4 id="React.Children.map">React.Children.map</h4>
+                    <pre><code>
+React.Children.map(children, function[(thisArg)])
+                    </code></pre>
+                    <p>Invokes a function on every immediate child contained within children with this set to thisArg.
+                        If children is an array it will be traversed and the function will be called for each child in
+                        the array. If children is null or undefined, this method will return null or undefined rather
+                        than an array.</p>
+                    <p class="warning">If children is a Fragment it will be treated as a single child and not traversed.
+                    </p>
+                </section>
+                <section>
+                    <h4 id="React.Children.forEach">React.Children.forEach</h4>
+                    <pre><code>
+React.Children.forEach(children, function[(thisArg)])
+                    </code></pre>
+                    <p>Like React.Children.map() but does not return an array.</p>
+                </section>
+                <section>
+                    <h4 id="React.Children.count">React.Children.count</h4>
+                    <pre><code>
+React.Children.count(children)
+                    </code></pre>
+                    <p>Returns the total number of components in children, equal to the number of times that a callback
+                        passed to map or forEach would be invoked.</p>
+                </section>
+                <section>
+                    <h4 id="React.Children.only">React.Children.only</h4>
+                    <pre><code>
+React.Children.only(children)
+                    </code></pre>
+                    <p>Verifies that children has only one child (a React element) and returns it. Otherwise this method
+                        throws an error.</p>
+                    <p class="warning">React.Children.only() does not accept the return value of React.Children.map()
+                        because it is an array rather than a React element.</p>
+                </section>
+                <section>
+                    <h4 id="React.Children.toArray">React.Children.toArray</h4>
+                    <pre><code>
+React.Children.toArray(children)
+                    </code></pre>
+                    <p>Returns the children opaque data structure as a flat array with keys assigned to each child.
+                        Useful if you want to manipulate collections of children in your render methods, especially if
+                        you want to reorder or slice this.props.children before passing it down.</p>
+                    <p class="warning">React.Children.toArray() changes keys to preserve the semantics of nested arrays
+                        when flattening lists of children. That is, toArray prefixes each key in the returned array so
+                        that each element’s key is scoped to the input array containing it.</p>
+                </section>
+            </section>
+            <section>
+                <h3 id="React.Fragment">React.Fragment</h3>
+                <p>The React.Fragment component lets you return multiple elements in a render() method without creating
+                    an additional DOM element:</p>
+                <pre><code>
+render() {
+    return (
+        &lt;React.Fragment&gt;
+        Some text.
+        &lt;h2&gt;A heading&lt;/h2&gt;
+        &lt;/React.Fragment&gt;
+    );
+}
+                </code></pre>
+                <p>You can also use it with the shorthand &lt;&gt;&lt;/&gt; syntax. For more information, see React
+                    v16.2.0: Improved Support for Fragments.</p>
+            </section>
+            <section>
+                <h3 id="React.createRef">React.createRef</h3>
+                <p>React.createRef creates a ref that can be attached to React elements via the ref attribute. </p>
+                <pre><code>
+                    
+
+class MyComponent extends React.Component {
+    constructor(props) {
+      super(props);
+  
+      this.inputRef = React.createRef();  }
+  
+    render() {
+      return &lt;input type=&quot;text&quot; ref={this.inputRef} /&gt;;  }
+  
+    componentDidMount() {
+      this.inputRef.current.focus();  }
+  }
+  
+  
+                </code></pre>
+            </section>
+            <section>
+                <h3 id="React.forwardRef">React.forwardRef</h3>
+                <p>React.forwardRef creates a React component that forwards the ref attribute it receives to another
+                    component below in the tree. This technique is not very common but is particularly useful in two
+                    scenarios:</p>
+                <ul>
+                    <li>Forwarding refs to DOM components</li>
+                    <li>Forwarding refs in higher-order-components</li>
+                </ul>
+                <p>React.forwardRef accepts a rendering function as an argument. React will call this function with
+                    props and ref as two arguments. This function should return a React node.</p>
+                <pre><code>
+                    
+
+const FancyButton = React.forwardRef((props, ref) =&gt; (  &lt;button ref={ref} className=&quot;FancyButton&quot;&gt;    {props.children}
+&lt;/button&gt;
+));
+
+// You can now get a ref directly to the DOM button:
+const ref = React.createRef();
+&lt;FancyButton ref={ref}&gt;Click me!&lt;/FancyButton&gt;;
+
+
+                </code></pre>
+                <p>In the above example, React passes a ref given to &lt;FancyButton ref={ref}&gt; element as a second
+                    argument to the rendering function inside the React.forwardRef call. This rendering function passes
+                    the ref to the &lt;button ref={ref}&gt; element.</p>
+                <p>As a result, after React attaches the ref, ref.current will point directly to the &lt;button&gt; DOM
+                    element instance.</p>
+                <p>For more information, see forwarding refs.</p>
+            </section>
+            <section>
+                <h3 id="React.lazy">React.lazy</h3>
+                <p>React.lazy() lets you define a component that is loaded dynamically. This helps reduce the bundle
+                    size to delay loading components that aren’t used during the initial render.</p>
+                <p>You can learn how to use it from our code splitting documentation. You might also want to check out
+                    this article explaining how to use it in more detail.</p>
+                <pre><code>
+// This component is loaded dynamically
+const SomeComponent = React.lazy(() =&gt; import(&apos;./SomeComponent&apos;));
+                </code></pre>
+                <p>Note that rendering lazy components requires that there&rsquo;s a &lt;React.Suspense&gt; component
+                    higher in the rendering tree. This is how you specify a loading indicator.</p>
+                <p class="warning">Using React.lazywith dynamic import requires Promises to be available in the JS
+                    environment. This requires a polyfill on IE11 and below</p>
+            </section>
+            <section>
+                <h3 id="React.Suspense">React.Suspense</h3>
+                <p class="question">
+                    why import('./OtherComponent') won't work unless imported this component "OtherComponent" already
+                </p>
+                <p>React.Suspense lets you specify the loading indicator in case some components in the tree below it
+                    are not yet ready to render. Today, lazy loading components is the only use case supported by
+                    &lt;React.Suspense&gt;:</p>
+                <pre><code>
+// This component is loaded dynamically
+const OtherComponent = React.lazy(() =&gt; import(&apos;./OtherComponent&apos;));
+
+function MyComponent() {
+  return (
+    // Displays &lt;Spinner&gt; until OtherComponent loads
+    &lt;React.Suspense fallback={&lt;Spinner /&gt;}&gt;
+      &lt;div&gt;
+        &lt;OtherComponent /&gt;
+      &lt;/div&gt;
+    &lt;/React.Suspense&gt;
+  );
+}
+                </code></pre>
+                <p>It is documented in our code splitting guide. Note that lazy components can be deep inside the
+                    Suspense tree &mdash; it doesn&rsquo;t have to wrap every one of them. The best practice is to place
+                    &lt;Suspense&gt; where you want to see a loading indicator, but to use lazy() wherever you want to
+                    do code splitting.</p>
+                <p>While this is not supported today, in the future we plan to let Suspense handle more scenarios such
+                    as data fetching. You can read about this in our roadmap.</p>
+                <p class="warning">React.lazy() and &lt;React.Suspense&gt; are not yet supported by ReactDOMServer. This
+                    is a known limitation that will be resolved in the future.</p>
+            </section>
+        </section>
+
+    </div>
+
+    <ul>
+        <li>overview</li>
+        <ul>
+            <li>components</li>
+            <li>creating-react-elements</li>
+            <li>transforming-elements</li>
+            <li>fragments</li>
+            <li>refs</li>
+            <li>suspense</li>
+            <li>hooks</li>
+        </ul>
+        <li>reference</li>
+        <ul>
+            <li>React.Component</li>
+            <li>React.PureComponent</li>
+            <li>React.memo</li>
+            <li>createElement()</li>
+            <li>cloneElement()</li>
+            <li>createFactory()</li>
+            <li>isValidElement()</li>
+            <li>React.Children</li>
+            <ul>
+                <li>React.Children.map</li>
+                <li>React.Children.forEach</li>
+                <li>React.Children.count</li>
+                <li>React.Children.only</li>
+                <li>React.Children.toArray</li>
+            </ul>
+            <li>React.Fragment</li>
+            <li>React.createRef</li>
+            <li>React.forwardRef</li>
+            <li>React.lazy</li>
+            <li>React.Suspense</li>
+        </ul>
+    </ul>
+
+
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#overview',
+                    href: '#overview',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#components',
+                            href: '#components',
+                        },
+                        {
+                            key: 2,
+                            text: '#creating-react-elements',
+                            href: '#creating-react-elements',
+                        },
+                        {
+                            key: 3,
+                            text: '#transforming-elements',
+                            href: '#transforming-elements',
+                        },
+                        {
+                            key: 4,
+                            text: '#fragments',
+                            href: '#fragments',
+                        },
+                        {
+                            key: 5,
+                            text: '#refs',
+                            href: '#refs',
+                        },
+                        {
+                            key: 6,
+                            text: '#suspense',
+                            href: '#suspense',
+                        },
+                        {
+                            key: 7,
+                            text: '#hooks',
+                            href: '#hooks',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#reference',
+                    href: '#reference',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#React.Component',
+                            href: '#React.Component',
+                        },
+                        {
+                            key: 2,
+                            text: '#React.PureComponent',
+                            href: '#React.PureComponent',
+                        },
+                        {
+                            key: 3,
+                            text: '#React.memo',
+                            href: '#React.memo',
+                        },
+                        {
+                            key: 4,
+                            text: '#createElement()',
+                            href: '#createElement()',
+                        },
+                        {
+                            key: 5,
+                            text: '#cloneElement()',
+                            href: '#cloneElement()',
+                        },
+                        {
+                            key: 6,
+                            text: '#createFactory()',
+                            href: '#createFactory()',
+                        },
+                        {
+                            key: 7,
+                            text: '#isValidElement()',
+                            href: '#isValidElement()',
+                        },
+                        {
+                            key: 8,
+                            text: '#React.Children',
+                            href: '#React.Children',
+                            subSubItems: [
+                                {
+                                    key: 1,
+                                    text: '#React.Children.map',
+                                    href: '#React.Children.map',
+                                },
+                                {
+                                    key: 2,
+                                    text: '#React.forEach',
+                                    href: '#React.forEach',
+                                },
+                                {
+                                    key: 3,
+                                    text: '#React.Children.count',
+                                    href: '#React.Children.count',
+                                },
+                                {
+                                    key: 4,
+                                    text: '#React.Children.only',
+                                    href: '#React.Children.only',
+                                },
+                                {
+                                    key: 5,
+                                    text: '#React.Children.toArray',
+                                    href: '#React.Children.toArray',
+                                },
+                            ]
+                        },
+                        {
+                            key: 9,
+                            text: '#React.Fragment',
+                            href: '#React.Fragment',
+                        },
+                        {
+                            key: 10,
+                            text: '#React.createRef',
+                            href: '#React.createRef',
+                        },
+                        {
+                            key: 11,
+                            text: '#React.forwardRef',
+                            href: '#React.forwardRef',
+                        },
+                        {
+                            key: 12,
+                            text: '#React.lazy',
+                            href: '#React.lazy',
+                        },
+                        {
+                            key: 13,
+                            text: '#React.Suspense',
+                            href: '#React.Suspense',
+                        },
+                    ]
+                },
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+
+
+
+
+            // React.Children
+            // React.Children.map(children, function[(thisArg)])
+            // React.Children.map(listItems, function (child, thisArg) {
+            //     console.info(
+            //         "listItems", listItems,
+            //         "thisArg", thisArg,
+            //         "child", child
+            //     )
+            //     return child
+            // })
+            // React.Children.forEach(children, function[(thisArg)])
+            // React.Children.forEach(listItems, function (child, thisArg) {
+            //     console.info(
+            //         "listItems", listItems,
+            //         "thisArg", thisArg,
+            //         "child", child
+            //     ) 
+            // })
+            // React.Children.count(children)
+            // console.info(
+            // "React.Children.count(listItems)",React.Children.count(listItems)
+            // )
+            // React.Children.only(children)
+            // console.info(
+            //     "React.Children.only(listItems)", React.Children.only(listItems)
+            // )
+            // React.Children.toArray(children)
+            // console.info(
+            //     "React.Children.toArray(listItems)", React.Children.toArray(listItems)
+            // )
+
+
+
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+    // React.createRef
+    class MyComponent extends React.Component {
+        constructor(props) {
+            super(props)
+
+            this.inputRef = React.createRef()
+        }
+
+        render() {
+            return <input type="text" ref={this.inputRef} />
+        }
+
+        componentDidMount() {
+            console.info(
+                "this.inputRef", this.inputRef,
+                "this.inputRef.current", this.inputRef.current,
+            )
+            this.inputRef.current.focus()
+        }
+    }
+
+    // React.forwardRef
+    const FancyButton = React.forwardRef((props, refs) => (
+        <button ref={ref} className="FancyButton">
+            {props.children}
+        </button>
+    ));
+
+    // You can now get a ref directly to the DOM button:
+    const ref = React.createRef()
+
+    class FancyButtonWrapper extends React.Component {
+        constructor(props) {
+            super(props)
+        }
+        componentDidMount() {
+            console.info(
+                "this.ref", this.ref,
+                "ref", ref,
+                "ref.current", ref.current,
+            )
+        }
+        render() {
+            return (
+                <FancyButton ref={ref}>Click me!</FancyButton>
+            )
+        }
+    }
+
+    // React.memo - v1
+    function MemoFunctionComponent(props) {
+        // render using props
+        console.info(
+            "memo props", props
+        )
+        return (
+            <i {...props}>memo</i>
+        )
+    }
+    // const MemoComponent = React.memo(MemoFunctionComponent)
+    // React.memo - v2 control over the comparison
+    function customComparisonFunction(prevProps, nextProps) {
+        console.info(
+            "prevProps, nextProps",
+            prevProps, nextProps
+        )
+        /*
+        return true if passing nextProps to render would return
+        the same result as passing prevProps to render,
+        otherwise return false
+        */
+    }
+    const MemoComponent = React.memo(MemoFunctionComponent, customComparisonFunction)
+
+    ReactDOM.render(
+        <div>
+            <MyComponent />
+            <FancyButtonWrapper ref={ref} />
+            <MemoComponent />
+        </div>,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

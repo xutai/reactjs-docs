@@ -1,0 +1,554 @@
+<article role="article" class="doc">
+    <div class="content doc">
+        <section>
+            <h1>
+                <svg width="30" height="30">
+                    <image href="/resources/images/reactjs/react.svg" src="/resources/images/reactjs/react.svg"
+                        class="react-logo" alt="react logo" srcset="" width="30px" height="30px" x="0" y="0" />
+                </svg>
+                Using the Effect Hook
+            </h1>
+        </section>
+
+        <section>
+            <p>The Effect Hook lets you perform side effects in function components:</p>
+            <p>Data fetching, setting up a subscription, and manually changing the DOM in React components are all
+                examples of side effects.</p>
+            <p>useEffect Hook ~= componentDidMount && componentDidUpdate && componentWillUnmount</p>
+        </section>
+
+        <section>
+            <ul>
+                <li>effects-without-cleanup</li>
+                <ul>
+                    <li>example-using-classes</li>
+                    <li>example-using-hooks</li>
+                    <li>detailed-explanation</li>
+                </ul>
+                <li>effects-with-cleanup</li>
+                <ul>
+                    <li>example-using-classes</li>
+                    <li>example-using-hooks</li>
+                </ul>
+                <li>recap</li>
+                <li>tips-for-using-effects</li>
+                <ul>
+                    <li>tip-use-multiple-effects-to-separate-concerns</li>
+                    <li>explanation-why-effects-run-on-each-update</li>
+                    <li>tip-optimizing-performance-by-skipping-effects</li>
+                </ul>
+                <li>next-steps</li>
+            </ul>
+        </section>
+        <section>
+            <h2 id="effects-without-cleanup">effects-without-cleanup</h2>
+            <p>run some additional code after React has updated the DOM.</p>
+            <p>Network requests, manual DOM mutations, and logging</p>
+            <section>
+                <h3 id="example-using-classes">example-using-classes</h3>
+            </section>
+            <section>
+                <h3 id="example-using-hooks">example-using-hooks</h3>
+                <ul>
+                    <li><strong>What does useEffect do?</strong> tell React that your component needs to do something
+                        after render DOM updates.. </li>
+                    <li><strong>Why is useEffect called inside a component?</strong> access state, props; funcion scope,
+                        closures</li>
+                    <li><strong>Does useEffect run after every render?</strong> mounting && updating</li>
+                </ul>
+                <p class="warning">Unlike componentDidMount or componentDidUpdate, effects scheduled with useEffect
+                    don’t block the browser from updating the screen. This makes your app feel more responsive. The
+                    majority of effects don’t need to happen synchronously. In the uncommon cases where they do (such as
+                    measuring the layout), there is a separate useLayoutEffect Hook with an API identical to useEffect.
+                </p>
+                <p class="question">block? sync or async?</p>
+                <pre><code>
+useEffect vs componentDidMount && componentDidUpdate
+    block the browser from updating the screen?         
+    no     |         yes
+                </code></pre>
+
+            </section>
+            <section>
+                <h3 id="detailed-explanation">detailed-explanation</h3>
+            </section>
+        </section>
+        <section>
+            <h2 id="effects-with-cleanup">effects-with-cleanup</h2>
+            <p>For example, we might want to <strong>set up a subscription</strong> to some external data source.
+                it is important to clean up so that we don’t introduce a memory leak!
+            </p>
+            <script>
+                // function f() {
+                //     var x = {}
+                //     var y = {}
+                //     x.a = y
+                //     y.a = x
+                //     console.info(
+                //         "f1",
+                //         x,
+                //         y
+                //     )
+                //     return 'memory leaks, not marked for garbage collection'
+                // }
+            </script>
+            <section>
+                <h3 id="example-using-classes">example-using-classes</h3>
+            </section>
+            <section>
+                <h3 id="example-using-hooks">example-using-hooks</h3>
+                <ul>
+                    <li><strong>Why did we return a function from our effect? </strong>optional; keep logic together
+                    </li>
+                    <li><strong>When exactly does React clean up an effect?</strong>React performs the cleanup when the
+                        component unmounts. However, as we learned earlier, effects run for every render and not just
+                        once. This is why React also cleans up effects from the previous render before running the
+                        effects next time. </li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <h2 id="recap">recap</h2>
+        </section>
+        <section>
+            <h2 id="tips-for-using-effects">tips-for-using-effects</h2>
+            <section>
+                <h3 id="tip-use-multiple-effects-to-separate-concerns">tip-use-multiple-effects-to-separate-concerns
+                </h3>
+                <p>motivation. class lifecycle methods often contain unrelated logic, but related logic gets broken up
+                    into several methods. </p>
+            </section>
+            <section>
+                <h3 id="explanation-why-effects-run-on-each-update">explanation-why-effects-run-on-each-update</h3>
+                <p>But what happens if the friend prop changes while the component is on the screen? bug</p>
+            </section>
+            <section>
+                <h3 id="tip-optimizing-performance-by-skipping-effects">tip-optimizing-performance-by-skipping-effects
+                </h3>
+                <p>In some cases, cleaning up or applying the effect after every render might create a performance
+                    problem.</p>
+                <p>comparison. class - prevProps && prevState && componentDidUpdate | hook, useEffect, second argument
+                </p>
+                <pre><code>
+// class component
+componentDidUpdate(prevProps, prevState) {
+    if (prevState.count !== this.state.count) {
+        document.title = `You clicked ${this.state.count} times`;
+    }
+}
+// function component && hook
+useEffect(() => {
+    document.title = `You clicked ${count} times`;
+}, [count]); // Only re-run the effect if count changes
+                </code></pre>
+                <div class="warning">
+                    <p>[...valuesChangeOverTime]: If you use this optimization, make sure the array includes all values from the component scope (such as props and state) that change over time and that are used by the effect. Otherwise, your code will reference stale values from previous renders. </p>
+                    <p>[]:  run an effect and clean it up only once (on mount and unmount). your effect doesn’t depend on any values from props or state, so it never needs to re-run. </p>
+                </div>
+                <p class="note">double check the note!</p>
+            </section>
+        </section>
+        <section>
+            <h2 id="next-steps">next-steps</h2>
+        </section>
+
+
+
+    </div>
+    <aside class="extra doc">
+        <section id="list"></section>
+        <script type="text/babel">
+            const Items = [
+                {
+                    key: 1,
+                    text: '#effects-without-cleanup',
+                    href: '#effects-without-cleanup',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#example-using-classes',
+                            href: '#example-using-classes',
+                        },
+                        {
+                            key: 2,
+                            text: '#example-using-hooks',
+                            href: '#example-using-hooks',
+                        },
+                        {
+                            key: 3,
+                            text: '#detailed-explanation',
+                            href: '#detailed-explanation',
+                        }
+                    ]
+                },
+                {
+                    key: 2,
+                    text: '#effects-with-cleanup',
+                    href: '#effects-with-cleanup',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#example-using-classes',
+                            href: '#example-using-classes',
+                        },
+                        {
+                            key: 2,
+                            text: '#example-using-hooks',
+                            href: '#example-using-hooks',
+                        }
+                    ]
+                },
+                {
+                    key: 3,
+                    text: '#recap',
+                    href: '#recap',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+                {
+                    key: 4,
+                    text: '#tips-for-using-effects',
+                    href: '#tips-for-using-effects',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#tip-use-multiple-effects-to-separate-concerns',
+                            href: '#tip-use-multiple-effects-to-separate-concerns',
+                        },
+                        {
+                            key: 2,
+                            text: '#explanation-why-effects-run-on-each-update',
+                            href: '#explanation-why-effects-run-on-each-update',
+                        },
+                        {
+                            key: 3,
+                            text: '#tip-optimizing-performance-by-skipping-effects',
+                            href: '#tip-optimizing-performance-by-skipping-effects',
+                        }
+                    ]
+                },
+                {
+                    key: 5,
+                    text: '#next-steps',
+                    href: '#next-steps',
+                    subItems: [
+                        {
+                            key: 1,
+                            text: '#',
+                            href: '#',
+                        }
+                    ]
+                },
+
+
+            ]
+            function SubSubUl(props) {
+                const subSubItems = props.subSubItems
+                if (!subSubItems || subSubItems.length === 0 || subSubItems.length === 1 && subSubItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subSubItems.map(item =>
+                            <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                        )}
+                    </ul>
+                )
+            }
+            function SubUl(props) {
+                const subItems = props.subItems
+                if (!subItems || subItems.length === 0 || subItems.length === 1 && subItems[0].text === '#') {
+                    return null
+                }
+                return (
+                    <ul>
+                        {subItems.map(item =>
+                            <React.Fragment key={item.key}>
+                                <li key={item.key}><a href={item.href}>{item.text}</a></li>
+                                <SubSubUl subSubItems={item.subSubItems} />
+                            </React.Fragment>
+                        )}
+                    </ul>
+                )
+            }
+            const listItems = Items.map((item) =>
+                <li key={item.key}>
+                    <a href={item.href}>{item.text}</a>
+                    <SubUl subItems={item.subItems} />
+                </li>
+            )
+            ReactDOM.render(
+                <ul className="react">{listItems}</ul>,
+                document.getElementById('list'),
+                () => console.log(new Date().getUTCSeconds())
+            )
+        </script>
+    </aside>
+</article>
+<aside class="sidebar doc" role="complementary">
+    <a href="#list" style="position: fixed; right: 0; bottom: 20px;">toList</a>
+</aside>
+
+
+
+
+<section id="plain-html">
+</section>
+<section id="vue">
+</section>
+<section id="react"></section>
+<script>
+    // common
+    const viewState = {
+        numbers: [1, 2, 3, 4, 5],
+        posts: [{
+            id: 1,
+            title: 'Learn React',
+            content: 'React is sky blue!'
+        },
+        {
+            id: 2,
+            title: 'Learn Vue',
+            content: 'Vue is mood Green!'
+        }
+        ]
+    }
+</script>
+<script>
+    // vanilla
+    const planHtml = document.querySelector('section[id$="plain-html"]')
+</script>
+<script>
+    // vue
+    const options = {
+        data() {
+            return {
+                ...viewState,
+            }
+        },
+        computed: {}
+    }
+    const vueInstance = Vue.createApp(options)
+    const viewModel = vueInstance.mount('#vue')
+</script>
+<script type="text/babel">
+    // react
+
+
+
+    // effects-without-cleanup -
+
+    class ExampleClass extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                count: 0
+            };
+        }
+
+        componentDidMount() {
+            document.title = `You clicked ${this.state.count} times`;
+        }
+        componentDidUpdate() {
+            document.title = `You clicked ${this.state.count} times`;
+        }
+        render() {
+            return (
+                <div>
+                    <p>You clicked {this.state.count} times</p>
+                    <button onClick={
+                        () => this.setState({
+                            count: this.state.count + 1
+                        })}
+                    >
+                        Click me
+                    </button>
+                </div>
+            );
+        }
+    }
+
+
+    function ExampleHook() {
+        const [count, setCount] = window.React.useState(0);
+
+        window.React.useEffect(() => {
+            document.title = `You clicked ${count} times`;
+        });
+
+        // Similar to componentDidMount and componentDidUpdate:  useEffect(() => {    // Update the document title using the browser API    document.title = `You clicked ${count} times`;  });
+        return (
+            <div>
+                <p>You clicked {count} times</p>
+                <button onClick={() => setCount(count + 1)}>
+                    Click me
+                </button>
+            </div>
+        );
+    }
+
+    // effects-with-clearup
+
+    const ChatAPI = {
+        subscribeToFriendStatus(propsFriendId, callback) { },
+        unsubscribeFromFriendStatus(propsFriendId, callback) {
+            // do other things
+            const state = getStateFrromPropsFriendId(propsFriendId)
+            callback(state)
+        }
+    }
+
+
+    class FriendStatusClassComponent extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { isOnline: null };
+            this.handleStatusChange = this.handleStatusChange.bind(this);
+        }
+
+        componentDidMount() {
+            ChatAPI.subscribeToFriendStatus(
+                this.props.friend.id,
+                this.handleStatusChange
+            );
+        }
+        componentWillUnmount() {
+            ChatAPI.unsubscribeFromFriendStatus(
+                this.props.friend.id,
+                this.handleStatusChange
+            );
+        }
+        handleStatusChange(status) {
+            this.setState({
+                isOnline: status.isOnline
+            });
+        }
+
+        render() {
+            if (this.state.isOnline === null) {
+                return 'Loading...';
+            }
+            return this.state.isOnline ? 'Online' : 'Offline';
+        }
+    }
+
+    function FriendStatusFunctionComponent(props) {
+        const [isOnline, setIsOnline] = window.React.useState(null);
+
+        window.React.useEffect(() => {
+            function handleStatusChange(status) {
+                setIsOnline(status.isOnline);
+            }
+            ChatAPI.subscribeToFriendStatus(
+                props.friend.id,
+                handleStatusChange
+            );
+            // Specify how to clean up after this effect:
+            return function cleanup() {
+                ChatAPI.unsubscribeFromFriendStatus(
+                    props.friend.id,
+                    handleStatusChange
+                );
+            };
+        });
+        if (isOnline === null) {
+            return 'Loading...';
+        }
+        return isOnline ? 'Online' : 'Offline';
+    }
+
+
+
+    // tip-use-multiple-effects-to-separate-concerns 
+    class FriendStatusWithCounter extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { count: 0, isOnline: null };
+            this.handleStatusChange = this.handleStatusChange.bind(this);
+        }
+
+        componentDidMount() {
+            document.title = `You clicked ${this.state.count} times`;
+            ChatAPI.subscribeToFriendStatus(
+                this.props.friend.id,
+                this.handleStatusChange
+            );
+        }
+
+        componentDidUpdate() {
+            document.title = `You clicked ${this.state.count} times`;
+
+            // explanation-why-effects-run-on-each-update
+
+            // Unsubscribe from the previous friend.id    
+            ChatAPI.unsubscribeFromFriendStatus(
+                prevProps.friend.id,
+                this.handleStatusChange
+            );
+            // Subscribe to the next friend.id   
+            ChatAPI.subscribeToFriendStatus(
+                this.props.friend.id,
+                this.handleStatusChange
+            );
+        }
+
+        componentWillUnmount() {
+            ChatAPI.unsubscribeFromFriendStatus(
+                this.props.friend.id,
+                this.handleStatusChange
+            );
+        }
+
+        handleStatusChange(status) {
+            this.setState({
+                isOnline: status.isOnline
+            });
+        }
+    }
+
+
+    function FriendStatusWithCounter(props) {
+        const [count, setCount] = window.React.useState(0);
+        window.React.useEffect(() => {
+            document.title = `You clicked ${count} times`;
+        });
+
+        const [isOnline, setIsOnline] = window.React.useState(null);
+        window.React.useEffect(() => {
+            ChatAPI.subscribeToFriendStatus(
+                props.friend.id,
+                handleStatusChange
+            );
+            return () => {
+                ChatAPI.unsubscribeFromFriendStatus(
+                    props.friend.id,
+                    handleStatusChange
+                );
+            };
+            // tip-optimizing-performance-by-skipping-effects 
+        }, [props.friend.id]);
+
+        function handleStatusChange(status) {
+            setIsOnline(status.isOnline);
+        }
+        // ...
+    }
+
+
+
+
+
+
+    ReactDOM.render(
+        <div>
+            <ExampleHook />
+        </div >,
+        document.getElementById('react'),
+        () => console.log(new Date().getUTCSeconds())
+    )
+</script>

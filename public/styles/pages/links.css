@@ -1,0 +1,68 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+a {
+    display: block;
+    max-width: 500px;
+    min-width: 100px;
+    margin: 10px 0;
+}
+
+#main {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+section {
+    height: 100%;
+}
+
+section[class~=sl] {
+    background-color: #0e87e3;
+
+}
+
+section[class~=sr] {
+    position: relative;
+
+}
+
+ul {}
+
+ul li {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.div_2 {
+    background-color: #ffb6b2;
+    opacity: 0;
+    transform: scale(0);
+    width: 0;
+    height: 0;
+    position: absolute;
+    z-index: 20;
+    overflow: auto;
+
+}
+
+.sl {
+    width: 15%;
+}
+
+.sr {
+    width: 85%;
+}
+
+.fl {
+    float: left;
+}
