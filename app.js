@@ -8,7 +8,7 @@ app.get('/', (req, res) => res.send('Hello World!'))
 
 app.use(express.static('public'))
 
-app.get('/docs/:name', (req, res, next) => { 
+app.get('/docs/:name1/:name2', (req, res, next) => { 
     let html = ''
     fs.readFile(__dirname + '/public/template/head.html',  (err, data) => {
         html += data
